@@ -1,0 +1,7 @@
+#DailyLight Configuration File
+
+# prefix message in chat
+message-prefix: '&6[&rDailyLight&6]'
+
+# primary color of chat messages
+primary-color: '&e'
