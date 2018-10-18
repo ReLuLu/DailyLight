@@ -30,22 +30,50 @@ public class DailyListener implements Listener {
 	public DailyListener(DailyManager dman) {
 		this.dman = dman;
 	}	
-	
+
+	// Liste aller gültigen Knöpfe für Checkpoints
 	private final List<Material> validbuttons = Arrays.asList(
 			Material.OAK_BUTTON, Material.BIRCH_BUTTON, Material.SPRUCE_BUTTON,
 			Material.DARK_OAK_BUTTON, Material.JUNGLE_BUTTON, Material.ACACIA_BUTTON
 			);
-	
+
+	// Liste aller gültigen Druckplatten für Checkpoints
 	private final List<Material> validplates = Arrays.asList(
 			Material.OAK_PRESSURE_PLATE, Material.BIRCH_PRESSURE_PLATE, 
 			Material.SPRUCE_PRESSURE_PLATE, Material.DARK_OAK_PRESSURE_PLATE, 
 			Material.JUNGLE_PRESSURE_PLATE, Material.ACACIA_PRESSURE_PLATE
 		);
-	
+
+	// Liste aller Topfpflanzen für den gm2 Deko-Schutz
+	private final List<Material> validpots = Arrays.asList(
+			Material.POTTED_ACACIA_SAPLING,
+			Material.POTTED_ALLIUM,
+			Material.POTTED_AZURE_BLUET,
+			Material.POTTED_BIRCH_SAPLING,
+			Material.POTTED_BLUE_ORCHID,
+			Material.POTTED_BROWN_MUSHROOM,
+			Material.POTTED_CACTUS,
+			Material.POTTED_DANDELION,
+			Material.POTTED_DARK_OAK_SAPLING,
+			Material.POTTED_DEAD_BUSH,
+			Material.POTTED_FERN,
+			Material.POTTED_JUNGLE_SAPLING,
+			Material.POTTED_OAK_SAPLING,
+			Material.POTTED_ORANGE_TULIP,
+			Material.POTTED_OXEYE_DAISY,
+			Material.POTTED_PINK_TULIP,
+			Material.POTTED_POPPY,
+			Material.POTTED_RED_MUSHROOM,
+			Material.POTTED_RED_TULIP,
+			Material.POTTED_SPRUCE_SAPLING,
+			Material.POTTED_WHITE_TULIP,
+			Material.FLOWER_POT
+	);
+
 	/**
 	 * Player interagiert bzw. löst etwas aus
 	 * 
-	 * @param pie
+	 * @param pie das PlayerInteractEvent
 	 */
 	@EventHandler
 	public void onCheck(PlayerInteractEvent pie) { 
@@ -53,11 +81,12 @@ public class DailyListener implements Listener {
 		// Rechtsklick Action
 		if(pie.getAction().equals(Action.RIGHT_CLICK_BLOCK)) {
 
-			Player p = (Player)pie.getPlayer();
+			Player p = pie.getPlayer();
 			Block bl = pie.getClickedBlock();
 			Material m = pie.getClickedBlock().getType();
 
-			if(validbuttons.contains(m)) { // wenn der Block in der Knopfliste ist
+			// wenn der Block in der Knopfliste ist
+			if(validbuttons.contains(m)) {
 				
 				// Den geklickten Block auf Switch casten
 				Switch sw = (Switch)bl.getState().getBlockData();
@@ -91,14 +120,22 @@ public class DailyListener implements Listener {
 					dman.setPlayerCheck(p.getDisplayName(), p.getLocation());
 					
 				}
+			}
 
+			// wenn der Block in der Topfpflanzenliste ist
+			else if(validpots.contains(m)) {
+
+				// wenn der Spieler sich im Parkour befindet
+				if(dman.isPlayerInDaily(p.getDisplayName())) {
+					pie.setCancelled(true);
+				}
 			}
 		}
 		
 		// Physical Action durch Betätigen einer Druckplatte
 		else if(pie.getAction().equals(Action.PHYSICAL)) {
 			
-			Player p = (Player)pie.getPlayer();
+			Player p = pie.getPlayer();
 			Block bl = pie.getClickedBlock();
 			Material m = pie.getClickedBlock().getType();
 			
@@ -122,7 +159,7 @@ public class DailyListener implements Listener {
 	/**
 	 * Das Foodlevel vom Spieler ändert sich
 	 * 
-	 * @param flce
+	 * @param flce das FoodLevelChangeEvent
 	 */
 	@EventHandler
 	public void onHunger(FoodLevelChangeEvent flce) { 
@@ -133,6 +170,7 @@ public class DailyListener implements Listener {
 		// ist die Entity auch ein Spieler?
 		if(he instanceof Player) {
 			Player p = (Player)he;
+
 			// ist der Spieler auch aktuell im Daily?
 			if(dman.isPlayerInDaily(p.getName())) {
 				flce.setCancelled(true);
