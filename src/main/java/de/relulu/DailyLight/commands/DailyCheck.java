@@ -41,18 +41,18 @@ public class DailyCheck implements CommandExecutor {
 						
 						p.sendMessage(dman.getConfigManager().getMessagePrefix() 
 								+ dman.getConfigManager().getMessagePrimaryColor() 
-								+ "Checkpointliste:§r ");
+								+ "Checkpointliste:Â§r ");
 						
 						for(String s : playcheckli) {
 							p.sendMessage(s);
 						}
 					} else p.sendMessage(dman.getConfigManager().getMessagePrefix() 
 							+ dman.getConfigManager().getMessagePrimaryColor() 
-							+ "Checkpointliste:§r leer");
+							+ "Checkpointliste:Â§r leer");
 				}
 				p.sendMessage(dman.getConfigManager().getMessagePrefix() 
 						+ dman.getConfigManager().getMessagePrimaryColor() 
-						+ "Zurück zum Checkpoint :)");
+						+ "ZurÃ¼ck zum Checkpoint :)");
 				
 				return true;
 				
@@ -68,14 +68,14 @@ public class DailyCheck implements CommandExecutor {
 						
 						p.sendMessage(dman.getConfigManager().getMessagePrefix() 
 								+ dman.getConfigManager().getMessagePrimaryColor() 
-								+ "Checkpointliste:§r ");
+								+ "Checkpointliste:Â§r ");
 						
 						for(String s : playcheckli) {
 							p.sendMessage(s);
 						}
 					} else p.sendMessage(dman.getConfigManager().getMessagePrefix() 
 							+ dman.getConfigManager().getMessagePrimaryColor() 
-							+ "Checkpointliste:§r leer");
+							+ "Checkpointliste:Â§r leer");
 					
 					return true;
 				}

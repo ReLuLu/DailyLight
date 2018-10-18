@@ -38,7 +38,7 @@ public class DailyEnd implements CommandExecutor {
 				
 				p.sendMessage(dman.getConfigManager().getMessagePrefix() 
 						+ dman.getConfigManager().getMessagePrimaryColor() 
-						+ "Parkour beendet in§r " + dman.getPlayerDurationTime(p.getDisplayName()));
+						+ "Parkour beendet inÂ§r " + dman.getPlayerDurationTime(p.getDisplayName()));
 				
 				dman.removePlayerStartTime(p.getDisplayName());
 				dman.removePlayerCheck(p.getDisplayName());
@@ -61,13 +61,13 @@ public class DailyEnd implements CommandExecutor {
 						
 						p.sendMessage(dman.getConfigManager().getMessagePrefix() 
 								+ dman.getConfigManager().getMessagePrimaryColor() 
-								+ "Parkour für Spieler:§r " + targetplayer.getDisplayName() 
+								+ "Parkour fÃ¼r Spieler:Â§r " + targetplayer.getDisplayName() 
 								+ dman.getConfigManager().getMessagePrimaryColor() 
 								+ " beendet.");
 						
 						targetplayer.sendMessage(dman.getConfigManager().getMessagePrefix() 
 								+ dman.getConfigManager().getMessagePrimaryColor() 
-								+ "Parkour beendet in§r " 
+								+ "Parkour beendet inÂ§r " 
 								+ dman.getPlayerDurationTime(targetplayer.getDisplayName()));
 						
 						dman.removePlayerStartTime(targetplayer.getDisplayName());
@@ -81,7 +81,7 @@ public class DailyEnd implements CommandExecutor {
 						
 						p.sendMessage(dman.getConfigManager().getMessagePrefix() 
 								+ dman.getConfigManager().getMessagePrimaryColor() 
-								+ "Spieler§r " + targetplayername 
+								+ "SpielerÂ§r " + targetplayername 
 								+ dman.getConfigManager().getMessagePrimaryColor() 
 								+ " konnte nicht gefunden werden.");
 						
@@ -93,7 +93,7 @@ public class DailyEnd implements CommandExecutor {
 					
 					p.sendMessage(dman.getConfigManager().getMessagePrefix() 
 							+ dman.getConfigManager().getMessagePrimaryColor() 
-							+ "Nur ein Operator kann für andere Spieler den Startpunkt setzen.");
+							+ "Nur ein Operator kann fÃ¼r andere Spieler den Startpunkt setzen.");
 					
 					return true;
 				}
