@@ -3,7 +3,7 @@ package de.relulu.DailyLight;
 import org.bukkit.configuration.file.FileConfiguration;
 
 /**
- * Diese Klasse kümmert sich um das Auslesen und Bereitstellen von Konfigurationsparametern
+ * Diese Klasse kÃ¼mmert sich um das Auslesen und Bereitstellen von Konfigurationsparametern
  * 
  * @author ReLuLu
  *
@@ -13,10 +13,10 @@ public class DailyConfigManager {
 	private FileConfiguration cfg;
 	
 	private String messageprefix = ""; // redundante Initialisierung
-	private String primarycolor = "§e"; // redundante Initialisierung
+	private String primarycolor = "Â§e"; // redundante Initialisierung
 	
 	/**
-	 * Konstruktor für für den Konfigurationsmanager
+	 * Konstruktor fÃ¼r fÃ¼r den Konfigurationsmanager
 	 * 
 	 * @param fcfg
 	 */
@@ -30,16 +30,16 @@ public class DailyConfigManager {
 	 */
 	private void initMessageCustomization() {
 		this.messageprefix = cfg.getString("message-prefix", ""); // leerer String als default
-		this.messageprefix = messageprefix.replace("&", "§"); // wandelt den MC Farbcode in Spigot Farbcode um (& zu §)
+		this.messageprefix = messageprefix.replace("&", "Â§"); // wandelt den MC Farbcode in Spigot Farbcode um (& zu Â§)
 		if(!(this.messageprefix.equals(""))) {
-			this.messageprefix = messageprefix + " "; // damit zw. Prefix und normalem Text eine Lücke ist
+			this.messageprefix = messageprefix + " "; // damit zw. Prefix und normalem Text eine LÃ¼cke ist
 		}
-		this.primarycolor = cfg.getString("primary-color", "§e"); // §e als default
-		this.primarycolor = primarycolor.replace("&", "§"); // wandelt den MC Farbcode in Spigot Farbcode um (& zu §)
+		this.primarycolor = cfg.getString("primary-color", "Â§e"); // Â§e als default
+		this.primarycolor = primarycolor.replace("&", "Â§"); // wandelt den MC Farbcode in Spigot Farbcode um (& zu Â§)
 	}
 	
 	/**
-	 * Gibt den Prefix für Chatausgaben des Plugins zurück
+	 * Gibt den Prefix fÃ¼r Chatausgaben des Plugins zurÃ¼ck
 	 * 
 	 * @return
 	 */
@@ -48,7 +48,7 @@ public class DailyConfigManager {
 	}
 	
 	/**
-	 * Gibt die Akzentfarbe für Chatausgaben des Plugins zurück
+	 * Gibt die Akzentfarbe fÃ¼r Chatausgaben des Plugins zurÃ¼ck
 	 * 
 	 * @return
 	 */

@@ -31,7 +31,7 @@ public class DailyManager {
 	}
 	
 	/**
-	 * Getter für's Log
+	 * Getter fÃ¼r's Log
 	 * 
 	 * @return
 	 */
@@ -40,8 +40,8 @@ public class DailyManager {
 	}
 	
 	/**
-	 * Gibt den DailyConfigManager zurück, um Zugriff 
-	 * auf Konfigurationsinhalte zu ermöglichen
+	 * Gibt den DailyConfigManager zurÃ¼ck, um Zugriff 
+	 * auf Konfigurationsinhalte zu ermÃ¶glichen
 	 * 
 	 * @return
 	 */
@@ -60,7 +60,7 @@ public class DailyManager {
 	}
 	
 	/**
-	 * Löscht die Spielerzeit
+	 * LÃ¶scht die Spielerzeit
 	 * 
 	 * @param pln
 	 * @return
@@ -77,8 +77,8 @@ public class DailyManager {
 	}
 	
 	/**
-	 * Gibt zurück, ob ein Spieler in einem Daily ist.
-	 * Fragt dafür ab, ob ein Start-Zeitstempel exitistiert, wenn
+	 * Gibt zurÃ¼ck, ob ein Spieler in einem Daily ist.
+	 * Fragt dafÃ¼r ab, ob ein Start-Zeitstempel exitistiert, wenn
 	 * nicht dann ist ein Spieler auch aktuell nicht im Daily.
 	 * 
 	 * @param pln
@@ -90,7 +90,7 @@ public class DailyManager {
 	}
 	
 	/**
-	 * Löscht den Spieler / Ort Datensatz
+	 * LÃ¶scht den Spieler / Ort Datensatz
 	 * 
 	 * @param pln
 	 * @return
@@ -116,7 +116,7 @@ public class DailyManager {
 	}
 	
 	/**
-	 * Schaut nach, ob ein Spieler bereits einen Checkpoint ausgelöst hat
+	 * Schaut nach, ob ein Spieler bereits einen Checkpoint ausgelÃ¶st hat
 	 * 
 	 * @param pln
 	 * @return
@@ -139,7 +139,7 @@ public class DailyManager {
 	}
 	
 	/**
-	 * Gibt die Dauer von Start zu Ende als String zurück
+	 * Gibt die Dauer von Start zu Ende als String zurÃ¼ck
 	 * 
 	 * @param pln
 	 * @return
@@ -153,8 +153,8 @@ public class DailyManager {
 			st = playertimes.get(pln);
 		} else {
 			//st = new Date(); // neues, aktuelles Datum setzen
-			return("0" + this.getConfigManager().getMessagePrimaryColor() + " Stunden, §r" 
-				    + "0" + this.getConfigManager().getMessagePrimaryColor() + " Minuten, §r" 
+			return("0" + this.getConfigManager().getMessagePrimaryColor() + " Stunden, Â§r" 
+				    + "0" + this.getConfigManager().getMessagePrimaryColor() + " Minuten, Â§r" 
 				    + "0" + this.getConfigManager().getMessagePrimaryColor() + " Sekunden"); 
 		}
 		
@@ -176,8 +176,8 @@ public class DailyManager {
 
 	    long elapsedSeconds = duration / secondsInMilli;
 	    
-	    return(elapsedHours + this.getConfigManager().getMessagePrimaryColor() + " Stunden, §r" 
-	    + elapsedMinutes + this.getConfigManager().getMessagePrimaryColor() + " Minuten, §r" 
+	    return(elapsedHours + this.getConfigManager().getMessagePrimaryColor() + " Stunden, Â§r" 
+	    + elapsedMinutes + this.getConfigManager().getMessagePrimaryColor() + " Minuten, Â§r" 
 	    + elapsedSeconds + this.getConfigManager().getMessagePrimaryColor() + " Sekunden"); 
 
 	}
@@ -197,21 +197,21 @@ public class DailyManager {
 			String y = String.valueOf(loc.getY());
 			String z = String.valueOf(loc.getZ());
 		    String xyz = x + this.getConfigManager().getMessagePrimaryColor() 
-		    		+ " / §r" + y 
+		    		+ " / Â§r" + y 
 		    		+ this.getConfigManager().getMessagePrimaryColor() 
-		    		+ " / §r" + z + " §r";
+		    		+ " / Â§r" + z + " Â§r";
 		    
 		    playercheckinfo = String.join(" ", this.getConfigManager().getMessagePrefix() 
-		    		+ "    §r" + pln 
+		    		+ "    Â§r" + pln 
 		    		+ this.getConfigManager().getMessagePrimaryColor() 
-		    		+ " @ §r" + xyz);
+		    		+ " @ Â§r" + xyz);
 		}
 		
 		return playercheckinfo;
 	}
 	
 	/**
-	 * Eine Debug-Methode, um Übersicht über aktuelle gespeicherte Checkpoints zu kriegen
+	 * Eine Debug-Methode, um Ãœbersicht Ã¼ber aktuelle gespeicherte Checkpoints zu kriegen
 	 * 
 	 * @return
 	 */
@@ -225,14 +225,14 @@ public class DailyManager {
 			String y = String.valueOf(value.getY());
 			String z = String.valueOf(value.getZ());
 		    String xyz = x + this.getConfigManager().getMessagePrimaryColor() 
-		    		+ " / §r" + y 
+		    		+ " / Â§r" + y 
 		    		+ this.getConfigManager().getMessagePrimaryColor() 
-		    		+ " / §r" + z + " §r";
+		    		+ " / Â§r" + z + " Â§r";
 		    
 		    playerchecklist.add(String.join(" ", this.getConfigManager().getMessagePrefix() 
-		    		+ "    §r" + key 
+		    		+ "    Â§r" + key 
 		    		+ this.getConfigManager().getMessagePrimaryColor() 
-		    		+ " @ §r" + xyz));
+		    		+ " @ Â§r" + xyz));
 		}	
 		return playerchecklist;
 	}

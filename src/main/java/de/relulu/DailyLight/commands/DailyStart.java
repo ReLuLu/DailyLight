@@ -42,7 +42,7 @@ public class DailyStart implements CommandExecutor {
 				dman.setPlayerCheck(p.getDisplayName(), p.getLocation());
 				dman.setPlayerStartTime(p.getDisplayName());
 				p.setInvulnerable(true);
-				p.setFoodLevel(20); // Hunger auf standardmäßig 10 Keulen auffüllen
+				p.setFoodLevel(20); // Hunger auf standardmÃ¤ÃŸig 10 Keulen auffÃ¼llen
 				
 				return true;
 				
@@ -66,12 +66,12 @@ public class DailyStart implements CommandExecutor {
 						
 						p.sendMessage(dman.getConfigManager().getMessagePrefix() 
 								+ dman.getConfigManager().getMessagePrimaryColor() 
-								+ "Startpunkt für Spieler:§r " + targetplayer.getDisplayName() 
+								+ "Startpunkt fÃ¼r Spieler:Â§r " + targetplayer.getDisplayName() 
 								+ dman.getConfigManager().getMessagePrimaryColor() + " gesetzt.");
 						
 						targetplayer.sendMessage(dman.getConfigManager().getMessagePrefix() 
 								+ dman.getConfigManager().getMessagePrimaryColor() 
-								+ "Dein Startpunkt wurde von§r " + p.getDisplayName() 
+								+ "Dein Startpunkt wurde vonÂ§r " + p.getDisplayName() 
 								+ dman.getConfigManager().getMessagePrimaryColor() + " gesetzt.");
 						
 						// Spieler zum Start-Initiator teleportieren
@@ -94,7 +94,7 @@ public class DailyStart implements CommandExecutor {
 						
 						p.sendMessage(dman.getConfigManager().getMessagePrefix() 
 								+ dman.getConfigManager().getMessagePrimaryColor() 
-								+ "Spieler§r " + targetplayername 
+								+ "SpielerÂ§r " + targetplayername 
 								+ dman.getConfigManager().getMessagePrimaryColor() 
 								+ " konnte nicht gefunden werden.");
 						
@@ -106,7 +106,7 @@ public class DailyStart implements CommandExecutor {
 					
 					p.sendMessage(dman.getConfigManager().getMessagePrefix() 
 							+ dman.getConfigManager().getMessagePrimaryColor() 
-							+ "Nur ein Operator kann für andere Spieler den Startpunkt setzen.");
+							+ "Nur ein Operator kann fÃ¼r andere Spieler den Startpunkt setzen.");
 					
 					return true;
 				}
