@@ -7,6 +7,7 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
+import de.relulu.DailyLight.util.MessageHandler;
 import de.relulu.DailyLight.DailyManager;
 
 /**
@@ -18,9 +19,11 @@ import de.relulu.DailyLight.DailyManager;
 public class DailyEnd implements CommandExecutor {
 
 	private DailyManager dman;
+	private MessageHandler mh;
 	
 	public DailyEnd(DailyManager dman) {
 		this.dman = dman;
+		this.mh = dman.getMessageHandler();
 	}
 	
 	/**
@@ -36,9 +39,8 @@ public class DailyEnd implements CommandExecutor {
 			// wenn der Befehl ohne Parameter daherkommt
 			if(comparams.length < 1) {
 				
-				p.sendMessage(dman.getConfigManager().getMessagePrefix() 
-						+ dman.getConfigManager().getMessagePrimaryColor() 
-						+ "Parkour beendet in§r " + dman.getPlayerDurationTime(p.getDisplayName()));
+				mh.tell(p, mh.getPrimaryColor() + "Parkour beendet in "
+						+ mh.getSecondaryFormat() + dman.getPlayerDurationTime(p.getDisplayName()));
 				
 				dman.removePlayerStartTime(p.getDisplayName());
 				dman.removePlayerCheck(p.getDisplayName());
@@ -53,22 +55,19 @@ public class DailyEnd implements CommandExecutor {
 				// nur wenn der Spieler auch Operator ist darf er das
 				if(p.isOp()) {
 					
-					String targetplayername = "";
+					String targetplayername;
 					targetplayername = comparams[0];
 					Player targetplayer = Bukkit.getPlayerExact(targetplayername);
-					
+
+					// nur wenn auch wirklich ein valider targetplayer vorhanden ist
 					if(targetplayer != null) {
 						
-						p.sendMessage(dman.getConfigManager().getMessagePrefix() 
-								+ dman.getConfigManager().getMessagePrimaryColor() 
-								+ "Parkour für Spieler:§r " + targetplayer.getDisplayName() 
-								+ dman.getConfigManager().getMessagePrimaryColor() 
-								+ " beendet.");
+						mh.tell(p, mh.getPrimaryColor() + "Parkour für Spieler: "
+                                + mh.getSecondaryFormat() + targetplayer.getDisplayName()
+								+ mh.getPrimaryColor() + " beendet.");
 						
-						targetplayer.sendMessage(dman.getConfigManager().getMessagePrefix() 
-								+ dman.getConfigManager().getMessagePrimaryColor() 
-								+ "Parkour beendet in§r " 
-								+ dman.getPlayerDurationTime(targetplayer.getDisplayName()));
+						mh.tell(targetplayer,mh.getPrimaryColor() + "Parkour beendet in "
+								+ mh.getSecondaryFormat() + dman.getPlayerDurationTime(targetplayer.getDisplayName()));
 						
 						dman.removePlayerStartTime(targetplayer.getDisplayName());
 						dman.removePlayerCheck(targetplayer.getDisplayName());
@@ -76,14 +75,13 @@ public class DailyEnd implements CommandExecutor {
 						targetplayer.playSound(targetplayer.getLocation(), Sound.UI_TOAST_CHALLENGE_COMPLETE, 0.5f, 1);
 						
 						return true;
-						
+
+                    // wenn der gewünschte targetplayer nicht gefunden werden konnte
 					} else {
 						
-						p.sendMessage(dman.getConfigManager().getMessagePrefix() 
-								+ dman.getConfigManager().getMessagePrimaryColor() 
-								+ "Spieler§r " + targetplayername 
-								+ dman.getConfigManager().getMessagePrimaryColor() 
-								+ " konnte nicht gefunden werden.");
+						mh.tell(p,mh.getPrimaryColor() + "Spieler "
+                                + mh.getSecondaryFormat() + targetplayername
+								+ mh.getPrimaryColor() + " konnte nicht gefunden werden.");
 						
 						return true;
 					}
@@ -91,17 +89,14 @@ public class DailyEnd implements CommandExecutor {
 				// sonst bekommt er eine Meldung, dass ihm die Rechte fehlen
 				} else {
 					
-					p.sendMessage(dman.getConfigManager().getMessagePrefix() 
-							+ dman.getConfigManager().getMessagePrimaryColor() 
-							+ "Nur ein Operator kann für andere Spieler den Startpunkt setzen.");
-					
+					mh.tell(p, mh.getPrimaryColor() + "Nur ein Operator kann für andere Spieler den Startpunkt setzen.");
 					return true;
 				}
 				
 			}
 		
 		} else {
-			sender.sendMessage("Nur ein Spieler kann diesen Befehl nutzen!");
+			mh.tell(sender, mh.getPrimaryColor() + "Nur ein Spieler kann diesen Befehl nutzen!");
 			return true;
 		}
 		
