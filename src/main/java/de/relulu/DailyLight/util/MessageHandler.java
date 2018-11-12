@@ -44,7 +44,7 @@ public class MessageHandler {
      * @param prefix the raw message prefix from config
      * @return prefix with converted chat color characters
      */
-    public String setPrefix(String prefix) {
+    private String setPrefix(String prefix) {
         return !prefix.trim().isEmpty() ? (prefix.replace("&", "§") + " ") : prefix.trim();
     }
 
@@ -54,7 +54,7 @@ public class MessageHandler {
      * @param color the raw color variable from config
      * @return color with converted chat color characters
      */
-    public String setPrimaryColor(String color) {
+    private String setPrimaryColor(String color) {
         return !color.trim().isEmpty() ? color.replace("&", "§") : color.trim();
     }
 
@@ -64,7 +64,7 @@ public class MessageHandler {
      * @param format the raw color variable from config
      * @return format with converted chat color characters
      */
-    public String setSecondaryFormat(String format) {
+    private String setSecondaryFormat(String format) {
         return !format.trim().isEmpty() ? format.replace("&", "§") : format.trim();
     }
 
