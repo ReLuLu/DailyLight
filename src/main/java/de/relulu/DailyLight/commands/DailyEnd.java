@@ -89,12 +89,13 @@ public class DailyEnd implements CommandExecutor {
 				// sonst bekommt er eine Meldung, dass ihm die Rechte fehlen
 				} else {
 					
-					mh.tell(p, mh.getPrimaryColor() + "Nur ein Operator kann für andere Spieler den Startpunkt setzen.");
+					mh.tell(p, mh.getPrimaryColor() + "Nur ein Operator kann für andere Spieler den Endpunkt setzen.");
 					return true;
 				}
 				
 			}
-		
+
+		// Konsole
 		} else {
 			mh.tell(sender, mh.getPrimaryColor() + "Nur ein Spieler kann diesen Befehl nutzen!");
 			return true;
