@@ -40,7 +40,7 @@ public class DailyCheck implements CommandExecutor {
 			if(dman.hasPlayerCheck(p.getDisplayName())) {
 				
 				p.teleport(dman.getPlayerCheck(p.getDisplayName()));
-				mh.tell(p, mh.getPrimaryColor() + "Zurück zum Checkpoint :>");
+				mh.tell(p, mh.getPrimaryColor() + "Zurück zum Checkpoint :)");
 
 			// wenn er sich nicht in der CP Liste befindet...
 			} else {
