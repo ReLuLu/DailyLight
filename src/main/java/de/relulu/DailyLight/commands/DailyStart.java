@@ -6,6 +6,7 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
+import de.relulu.DailyLight.util.MessageHandler;
 import de.relulu.DailyLight.DailyManager;
 
 /**
@@ -17,9 +18,11 @@ import de.relulu.DailyLight.DailyManager;
 public class DailyStart implements CommandExecutor {
 	
 	private DailyManager dman;
+	private MessageHandler mh;
 	
 	public DailyStart(DailyManager dman) {
 		this.dman = dman;
+		this.mh = dman.getMessageHandler();
 	}
 
 	/**
@@ -35,9 +38,7 @@ public class DailyStart implements CommandExecutor {
 			// wenn der Befehl ohne Parameter daherkommt
 			if(comparams.length < 1) {
 				
-				p.sendMessage(dman.getConfigManager().getMessagePrefix() 
-						+ dman.getConfigManager().getMessagePrimaryColor() 
-						+ "Startpunkt gesetzt");
+				mh.tell(p,mh.getPrimaryColor() + "Startpunkt gesetzt");
 				
 				dman.setPlayerCheck(p.getDisplayName(), p.getLocation());
 				dman.setPlayerStartTime(p.getDisplayName());
@@ -52,27 +53,20 @@ public class DailyStart implements CommandExecutor {
 				// nur wenn der Spieler auch Operator ist darf er das
 				if(p.isOp()) {
 					
-					String targetplayername = "";
-					
-					/*
-					for(String s: comparams) {
-						targetplayername = s;
-					}*/
-					
+					String targetplayername;
 					targetplayername = comparams[0];
-
 					Player targetplayer = Bukkit.getPlayerExact(targetplayername);
+
+                    // nur wenn auch wirklich ein valider targetplayer vorhanden ist
 					if(targetplayer != null) {
 						
-						p.sendMessage(dman.getConfigManager().getMessagePrefix() 
-								+ dman.getConfigManager().getMessagePrimaryColor() 
-								+ "Startpunkt für Spieler:§r " + targetplayer.getDisplayName() 
-								+ dman.getConfigManager().getMessagePrimaryColor() + " gesetzt.");
+						mh.tell(p,mh.getPrimaryColor() + "Startpunkt für Spieler: "
+                                + mh.getSecondaryFormat() + targetplayer.getDisplayName()
+								+ mh.getPrimaryColor() + " gesetzt.");
 						
-						targetplayer.sendMessage(dman.getConfigManager().getMessagePrefix() 
-								+ dman.getConfigManager().getMessagePrimaryColor() 
-								+ "Dein Startpunkt wurde von§r " + p.getDisplayName() 
-								+ dman.getConfigManager().getMessagePrimaryColor() + " gesetzt.");
+						mh.tell(targetplayer, mh.getPrimaryColor() + "Dein Startpunkt wurde von "
+                                + mh.getSecondaryFormat() + p.getDisplayName()
+								+ mh.getPrimaryColor() + " gesetzt.");
 						
 						// Spieler zum Start-Initiator teleportieren
 						targetplayer.teleport(p.getLocation());
@@ -80,42 +74,36 @@ public class DailyStart implements CommandExecutor {
 						// Location vom targetplayer
 						dman.setPlayerCheck(targetplayer.getDisplayName(), targetplayer.getLocation());
 						
-						// Location von dem, der den Befehl tippt
-						//dman.setPlayerCheck(targetplayer.getDisplayName(), p.getLocation());
-						
 						dman.setPlayerStartTime(targetplayer.getDisplayName());
 						
 						// Spieler unverwundbar setzen
 						targetplayer.setInvulnerable(true);
 						
 						return true;
-						
+
+                    // wenn der gewünschte targetplayer nicht gefunden werden konnte
 					} else {
-						
-						p.sendMessage(dman.getConfigManager().getMessagePrefix() 
-								+ dman.getConfigManager().getMessagePrimaryColor() 
-								+ "Spieler§r " + targetplayername 
-								+ dman.getConfigManager().getMessagePrimaryColor() 
-								+ " konnte nicht gefunden werden.");
+
+                        mh.tell(p,mh.getPrimaryColor() + "Spieler "
+                                + mh.getSecondaryFormat() + targetplayername
+                                + mh.getPrimaryColor() + " konnte nicht gefunden werden.");
 						
 						return true;
 					}
 				
 				// sonst bekommt er eine Meldung, dass ihm die Rechte fehlen
 				} else {
-					
-					p.sendMessage(dman.getConfigManager().getMessagePrefix() 
-							+ dman.getConfigManager().getMessagePrimaryColor() 
-							+ "Nur ein Operator kann für andere Spieler den Startpunkt setzen.");
-					
-					return true;
+
+                    mh.tell(p, mh.getPrimaryColor() + "Nur ein Operator kann für andere Spieler den Startpunkt setzen.");
+                    return true;
 				}
 				
 			}
-		
+
+		// Konsole
 		} else {
-			sender.sendMessage("Nur ein Spieler kann diesen Befehl nutzen!");
-			return true;
+            mh.tell(sender, mh.getPrimaryColor() + "Nur ein Spieler kann diesen Befehl nutzen!");
+            return true;
 		}
 		
 		return false;
