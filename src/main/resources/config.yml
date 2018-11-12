@@ -5,3 +5,6 @@ message-prefix: '&6[&rDailyLight&6]'
 
 # primary color of chat messages
 primary-color: '&e'
+
+# secondary format of chat messages
+secondary-format: '&r'
