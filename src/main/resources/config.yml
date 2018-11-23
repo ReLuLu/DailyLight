@@ -8,3 +8,61 @@ primary-color: '&e'
 
 # secondary format of chat messages
 secondary-format: '&r'
+
+# prevents a player from dealing damage due to damage sources (e.g. fall, fire, attack, ..)
+# only active between /dstart and /dend
+player-immortal: true
+
+# prevents a player from getting hungry so he doesn't need food to keep running
+# only active between /dstart and /dend
+player-nohunger: true
+
+# prevents decoration stuff like flower pots from getting griefed in gamemode 2
+# only active between /dstart and /dend
+decoration-antigrief: true
+
+# antigrief-materials
+# DO NOT EDIT UNLESS YOU KNOW WHAT YOU ARE DOING!
+decoration-antigrief-materials:
+- Material.POTTED_ACACIA_SAPLING,
+- Material.POTTED_ALLIUM,
+- Material.POTTED_AZURE_BLUET,
+- Material.POTTED_BIRCH_SAPLING,
+- Material.POTTED_BLUE_ORCHID,
+- Material.POTTED_BROWN_MUSHROOM,
+- Material.POTTED_CACTUS,
+- Material.POTTED_DANDELION,
+- Material.POTTED_DARK_OAK_SAPLING,
+- Material.POTTED_DEAD_BUSH,
+- Material.POTTED_FERN,
+- Material.POTTED_JUNGLE_SAPLING,
+- Material.POTTED_OAK_SAPLING,
+- Material.POTTED_ORANGE_TULIP,
+- Material.POTTED_OXEYE_DAISY,
+- Material.POTTED_PINK_TULIP,
+- Material.POTTED_POPPY,
+- Material.POTTED_RED_MUSHROOM,
+- Material.POTTED_RED_TULIP,
+- Material.POTTED_SPRUCE_SAPLING,
+- Material.POTTED_WHITE_TULIP,
+- Material.FLOWER_POT
+
+# materials (buttons) that trigger a checkpoint
+# DO NOT EDIT UNLESS YOU KNOW WHAT YOU ARE DOING!
+checkpoint-trigger-buttons:
+- Material.OAK_BUTTON
+- Material.BIRCH_BUTTON
+- Material.SPRUCE_BUTTON,
+- Material.DARK_OAK_BUTTON
+- Material.JUNGLE_BUTTON
+- Material.ACACIA_BUTTON
+
+# materials (pressure plates) that trigger a checkpoint
+# DO NOT EDIT UNLESS YOU KNOW WHAT YOU ARE DOING!
+checkpoint-trigger-plates:
+- Material.OAK_PRESSURE_PLATE
+- Material.BIRCH_PRESSURE_PLATE,
+- Material.SPRUCE_PRESSURE_PLATE
+- Material.DARK_OAK_PRESSURE_PLATE,
+- Material.JUNGLE_PRESSURE_PLATE
+- Material.ACACIA_PRESSURE_PLATE
