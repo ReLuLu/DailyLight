@@ -11,7 +11,7 @@ secondary-format: '&r'
 
 # prevents a player from dealing damage due to damage sources (e.g. fall, fire, attack, ..)
 # only active between /dstart and /dend
-player-immortal: true
+player-nodamage: true
 
 # prevents a player from getting hungry so he doesn't need food to keep running
 # only active between /dstart and /dend
