@@ -1,8 +1,11 @@
 package de.relulu.DailyLight;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import de.relulu.DailyLight.util.ConfigManager;
+import de.relulu.DailyLight.util.MessageHandler;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
@@ -26,51 +29,70 @@ import org.bukkit.block.data.type.Switch.Face;
 public class DailyListener implements Listener {
 	
 	private DailyManager dman;
+	private MessageHandler mh;
+	private ConfigManager dconf;
 
-	public DailyListener(DailyManager dman) {
-		this.dman = dman;
-	}	
+    /**
+     * Konstruktor für den Listener
+     * @param dman DailyManager Objekt
+     */
+    public DailyListener(DailyManager dman) {
+        this.dman = dman;
+        this.mh = dman.getMessageHandler();
+        this.dconf = dman.getConfigManager();
+        try {
+            // probieren die Listen aus der Config auszulesen...
+            this.triggerbuttons = dconf.getCheckpointTriggerButtons();
+            this.triggerplates = dconf.getCheckpointTriggerPlates();
+            this.antigriefmaterials = dconf.getAntiGriefMaterials();
+        } catch(Exception e) {
+            // wenns fehlschlägt dann implizit füllen
+            // Liste aller gültigen Knöpfe für Checkpoints
+            this.triggerbuttons = new ArrayList<>(Arrays.asList(
+                    Material.OAK_BUTTON, Material.BIRCH_BUTTON, Material.SPRUCE_BUTTON,
+                    Material.DARK_OAK_BUTTON, Material.JUNGLE_BUTTON, Material.ACACIA_BUTTON
+            ));
 
-	// Liste aller gültigen Knöpfe für Checkpoints
-	private final List<Material> validbuttons = Arrays.asList(
-			Material.OAK_BUTTON, Material.BIRCH_BUTTON, Material.SPRUCE_BUTTON,
-			Material.DARK_OAK_BUTTON, Material.JUNGLE_BUTTON, Material.ACACIA_BUTTON
-			);
+            // Liste aller gültigen Druckplatten für Checkpoints
+            this.triggerplates = new ArrayList<>(Arrays.asList(
+                    Material.OAK_PRESSURE_PLATE, Material.BIRCH_PRESSURE_PLATE,
+                    Material.SPRUCE_PRESSURE_PLATE, Material.DARK_OAK_PRESSURE_PLATE,
+                    Material.JUNGLE_PRESSURE_PLATE, Material.ACACIA_PRESSURE_PLATE
+            ));
 
-	// Liste aller gültigen Druckplatten für Checkpoints
-	private final List<Material> validplates = Arrays.asList(
-			Material.OAK_PRESSURE_PLATE, Material.BIRCH_PRESSURE_PLATE, 
-			Material.SPRUCE_PRESSURE_PLATE, Material.DARK_OAK_PRESSURE_PLATE, 
-			Material.JUNGLE_PRESSURE_PLATE, Material.ACACIA_PRESSURE_PLATE
-		);
+            // Liste aller Topfpflanzen für den gm2 Deko-Schutz
+            this.antigriefmaterials = new ArrayList<>(Arrays.asList(
+                    Material.POTTED_ACACIA_SAPLING,
+                    Material.POTTED_ALLIUM,
+                    Material.POTTED_AZURE_BLUET,
+                    Material.POTTED_BIRCH_SAPLING,
+                    Material.POTTED_BLUE_ORCHID,
+                    Material.POTTED_BROWN_MUSHROOM,
+                    Material.POTTED_CACTUS,
+                    Material.POTTED_DANDELION,
+                    Material.POTTED_DARK_OAK_SAPLING,
+                    Material.POTTED_DEAD_BUSH,
+                    Material.POTTED_FERN,
+                    Material.POTTED_JUNGLE_SAPLING,
+                    Material.POTTED_OAK_SAPLING,
+                    Material.POTTED_ORANGE_TULIP,
+                    Material.POTTED_OXEYE_DAISY,
+                    Material.POTTED_PINK_TULIP,
+                    Material.POTTED_POPPY,
+                    Material.POTTED_RED_MUSHROOM,
+                    Material.POTTED_RED_TULIP,
+                    Material.POTTED_SPRUCE_SAPLING,
+                    Material.POTTED_WHITE_TULIP,
+                    Material.FLOWER_POT
+            ));
+        }
+	}
 
-	// Liste aller Topfpflanzen für den gm2 Deko-Schutz
-	private final List<Material> validpots = Arrays.asList(
-			Material.POTTED_ACACIA_SAPLING,
-			Material.POTTED_ALLIUM,
-			Material.POTTED_AZURE_BLUET,
-			Material.POTTED_BIRCH_SAPLING,
-			Material.POTTED_BLUE_ORCHID,
-			Material.POTTED_BROWN_MUSHROOM,
-			Material.POTTED_CACTUS,
-			Material.POTTED_DANDELION,
-			Material.POTTED_DARK_OAK_SAPLING,
-			Material.POTTED_DEAD_BUSH,
-			Material.POTTED_FERN,
-			Material.POTTED_JUNGLE_SAPLING,
-			Material.POTTED_OAK_SAPLING,
-			Material.POTTED_ORANGE_TULIP,
-			Material.POTTED_OXEYE_DAISY,
-			Material.POTTED_PINK_TULIP,
-			Material.POTTED_POPPY,
-			Material.POTTED_RED_MUSHROOM,
-			Material.POTTED_RED_TULIP,
-			Material.POTTED_SPRUCE_SAPLING,
-			Material.POTTED_WHITE_TULIP,
-			Material.FLOWER_POT
-	);
+    private List<Material> triggerbuttons;
+    private List<Material> triggerplates;
+    private List<Material> antigriefmaterials;
 
-	/**
+    /**
 	 * Player interagiert bzw. löst etwas aus
 	 * 
 	 * @param pie das PlayerInteractEvent
@@ -86,7 +108,7 @@ public class DailyListener implements Listener {
 			Material m = pie.getClickedBlock().getType();
 
 			// wenn der Block in der Knopfliste ist
-			if(validbuttons.contains(m)) {
+			if(triggerbuttons.contains(m)) {
 				
 				// Den geklickten Block auf Switch casten
 				Switch sw = (Switch)bl.getState().getBlockData();
@@ -94,8 +116,8 @@ public class DailyListener implements Listener {
 				// Knopf obendrauf aber nicht an der Decke
 				if((sw.getFace() == Face.FLOOR) && (bl.getRelative(BlockFace.DOWN).getType() == Material.GOLD_BLOCK)) {
 					
-					p.sendMessage(dman.getConfigManager().getMessagePrefix() 
-							+ dman.getConfigManager().getMessagePrimaryColor() 
+					p.sendMessage(mh.getPrefix()
+							+ mh.getPrimaryColor()
 							+ "Checkpoint Knopf obendrauf");
 					dman.setPlayerCheck(p.getDisplayName(), p.getLocation());
 					
@@ -104,9 +126,9 @@ public class DailyListener implements Listener {
 				// Knopf drumrum, schaut nach dem Block an dem face wo Knopf dranklebt
 				else if(bl.getRelative(sw.getFacing().getOppositeFace()).getType() == Material.GOLD_BLOCK) {
 					
-					p.sendMessage(dman.getConfigManager().getMessagePrefix() 
-							+ dman.getConfigManager().getMessagePrimaryColor() 
-							+ "Checkpoint Knopf drumrum");
+					p.sendMessage(mh.getPrefix()
+                            + mh.getPrimaryColor()
+                            + "Checkpoint Knopf drumrum");
 					dman.setPlayerCheck(p.getDisplayName(), p.getLocation());
 					
 				}
@@ -114,8 +136,8 @@ public class DailyListener implements Listener {
 				// Knopf an der Decke aber nur wenn dort ein Goldblock ist
 				else if((sw.getFace() == Face.CEILING) && (bl.getRelative(BlockFace.UP).getType() == Material.GOLD_BLOCK)) {
 					
-					p.sendMessage(dman.getConfigManager().getMessagePrefix() 
-							+ dman.getConfigManager().getMessagePrimaryColor() 
+					p.sendMessage(mh.getPrefix()
+                            + mh.getPrimaryColor()
 							+ "Checkpoint Knopf an der Decke");
 					dman.setPlayerCheck(p.getDisplayName(), p.getLocation());
 					
@@ -123,7 +145,7 @@ public class DailyListener implements Listener {
 			}
 
 			// wenn der Block in der Topfpflanzenliste ist
-			else if(validpots.contains(m)) {
+			else if(antigriefmaterials.contains(m)) {
 
 				// wenn der Spieler sich im Parkour befindet
 				if(dman.isPlayerInDaily(p.getDisplayName())) {
@@ -139,13 +161,13 @@ public class DailyListener implements Listener {
 			Block bl = pie.getClickedBlock();
 			Material m = pie.getClickedBlock().getType();
 			
-			if(validplates.contains(m)) {
+			if(triggerplates.contains(m)) {
 				
 				// Druckplatten sind ja immer auf einem Untergrund, daher DOWN
 				if(bl.getRelative(BlockFace.DOWN).getType() == Material.GOLD_BLOCK) {
 					
-					p.sendMessage(dman.getConfigManager().getMessagePrefix() 
-							+ dman.getConfigManager().getMessagePrimaryColor() 
+					p.sendMessage(mh.getPrefix()
+                            + mh.getPrimaryColor()
 							+ "Checkpoint Platte obendrauf");
 					dman.setPlayerCheck(p.getDisplayName(), p.getLocation());
 
@@ -162,20 +184,24 @@ public class DailyListener implements Listener {
 	 * @param flce das FoodLevelChangeEvent
 	 */
 	@EventHandler
-	public void onHunger(FoodLevelChangeEvent flce) { 
-		
-		// welche Entity löst das Event aus
-		HumanEntity he = flce.getEntity();
-		
-		// ist die Entity auch ein Spieler?
-		if(he instanceof Player) {
-			Player p = (Player)he;
+	public void onHunger(FoodLevelChangeEvent flce) {
 
-			// ist der Spieler auch aktuell im Daily?
-			if(dman.isPlayerInDaily(p.getName())) {
-				flce.setCancelled(true);
-			}
-		}
+	    // nur wenn es in der Konfiguration aktiviert ist
+        if(dconf.getNoHunger()) {
+
+            // welche Entity löst das Event aus
+            HumanEntity he = flce.getEntity();
+
+            // ist die Entity auch ein Spieler?
+            if(he instanceof Player) {
+                Player p = (Player)he;
+
+                // ist der Spieler auch aktuell im Daily?
+                if(dman.isPlayerInDaily(p.getName())) {
+                    flce.setCancelled(true);
+                }
+            }
+        }
 		
 	}
 
