@@ -5,6 +5,7 @@ import java.io.FileOutputStream;
 import java.io.InputStream;
 import java.io.OutputStream;
 
+import de.relulu.DailyLight.commands.DailyConfig;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.PluginDescriptionFile;
@@ -40,6 +41,7 @@ public class DailyInit extends JavaPlugin {
 		DailyManager dman = new DailyManager(this);
 		
         getServer().getPluginManager().registerEvents(new DailyListener(dman), this);
+        this.getCommand("daily").setExecutor(new DailyConfig(dman));
         this.getCommand("dcheck").setExecutor(new DailyCheck(dman));
         this.getCommand("dstart").setExecutor(new DailyStart(dman));
         this.getCommand("dend").setExecutor(new DailyEnd(dman));
