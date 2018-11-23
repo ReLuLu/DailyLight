@@ -4,6 +4,10 @@ version: ${project.version}
 api-version: 1.13
 author: ReLuLu
 commands:
+  daily:
+    description: Provides access to administrative daily commands and prints an overview of them.
+    usage: /daily
+    aliases:
   dcheck:
     description: Teleports the player back to the last triggered checkpoint.
     usage: /dcheck
