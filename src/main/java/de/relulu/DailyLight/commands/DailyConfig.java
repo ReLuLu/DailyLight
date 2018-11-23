@@ -125,6 +125,24 @@ public class DailyConfig implements CommandExecutor {
 
                                 break;
 
+                            case "debug":
+
+                                // für Zeug was nur zum Debugging gebraucht wird
+                                mh.tell(p, "Buttons");
+                                for(Object o : dconf.getCheckpointTriggerButtons()) {
+                                    mh.tell(p, o.toString());
+                                }
+                                mh.tell(p, "Druckplatten");
+                                for(Object o : dconf.getCheckpointTriggerPlates()) {
+                                    mh.tell(p, o.toString());
+                                }
+                                mh.tell(p, "Antigrief");
+                                for(Object o : dconf.getAntiGriefMaterials()) {
+                                    mh.tell(p, o.toString());
+                                }
+
+                                break;
+
                             // wenn kein Unterbefehl zutrifft, dann gib die Befehlsliste aus
                             default:
                                 helpMessage(p);
