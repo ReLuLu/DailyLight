@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.logging.Logger;
 
+import de.relulu.DailyLight.util.ConfigManager;
 import de.relulu.DailyLight.util.MessageHandler;
 import org.bukkit.Location;
 
@@ -19,7 +20,7 @@ import org.bukkit.Location;
 public class DailyManager {
 	
 	private DailyInit di;
-	private DailyConfigManager dcoman;
+	private ConfigManager dcoman;
 
 	private MessageHandler mh;
 	
@@ -30,7 +31,7 @@ public class DailyManager {
 	
 	public DailyManager(DailyInit di) {
 		this.di = di;
-		this.dcoman = new DailyConfigManager(di.getConfig());
+		this.dcoman = new ConfigManager(di.getConfig());
 		this.mh = new MessageHandler(
 		        di.getConfig().getString("message-prefix", ""),
                 di.getConfig().getString("primary-color", "§e"),
@@ -58,12 +59,12 @@ public class DailyManager {
     }
 
 	/**
-	 * Gibt den DailyConfigManager zurück, um Zugriff 
+	 * Gibt den ConfigManager zurück, um Zugriff
 	 * auf Konfigurationsinhalte zu ermöglichen
 	 * 
-	 * @return dcoman DailyConfigManager
+	 * @return dcoman ConfigManager
 	 */
-	public DailyConfigManager getConfigManager() {
+	public ConfigManager getConfigManager() {
 		return this.dcoman;
 	}
 	
@@ -191,36 +192,6 @@ public class DailyManager {
                 mh.getSecondaryFormat() + elapsedMinutes + mh.getPrimaryColor() + " Minuten, " +
                 mh.getSecondaryFormat() + elapsedSeconds + mh.getPrimaryColor() + " Sekunden");
 
-	}
-	
-	/**
-	 * Eine Debug-Methode, um den aktuell gespeicherten Checkpoint zum Spieler ausgeben zu lassen
-	 * 
-	 * @param pln Spielername als String
-	 * @return playercheckinfo formatierter String mit Spielername und Location des zugehörigen Checkpoints
-	 */
-	public String getPlayerCheckLocationInfo(String pln) {
-		String playercheckinfo = "";
-		
-		if(playerchecks.containsKey(pln)) {
-			Location loc = playerchecks.get(pln);
-			String x = String.valueOf(loc.getX());
-			String y = String.valueOf(loc.getY());
-			String z = String.valueOf(loc.getZ());
-		    String xyz = mh.getSecondaryFormat() + x
-                    + mh.getPrimaryColor() + " / "
-                    + mh.getSecondaryFormat() + y
-		    		+ mh.getPrimaryColor() + " / " +
-                    mh.getSecondaryFormat() + z
-                    + " " + mh.getSecondaryFormat();
-		    
-		    playercheckinfo = String.join(" ", this.getConfigManager().getMessagePrefix() 
-		    		+ "    §r" + pln 
-		    		+ mh.getPrimaryColor()
-		    		+ " @ §r" + xyz);
-		}
-		
-		return playercheckinfo;
 	}
 	
 	/**
