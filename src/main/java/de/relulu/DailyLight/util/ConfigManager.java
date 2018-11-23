@@ -26,19 +26,19 @@ public class ConfigManager {
 	}
 
 	/**
-	 * Setzt die immortal-Variable
+	 * Setzt die nodamage-Variable
 	 * @param b neuer Wert
 	 */
 	public void setNoDamage(boolean b) {
-		cfg.set("player-immortal", b);
+		cfg.set("player-nodamage", b);
 	}
 
 	/**
-	 * Holt den Wert der immortal-Variable
+	 * Holt den Wert der nodamage-Variable
 	 * @return Wert der Variable
 	 */
 	public boolean getNoDamage() {
-		return cfg.getBoolean("player-immortal");
+		return cfg.getBoolean("player-nodamage");
 	}
 
 	/**
@@ -86,7 +86,7 @@ public class ConfigManager {
      * @return die Materials als Liste
      */
     public List<Material> getCheckpointTriggerButtons() {
-	    return getListFromConfig("checkpoint-triggers-buttons");
+	    return getListFromConfig("checkpoint-trigger-buttons");
     }
 
     /**
@@ -94,7 +94,7 @@ public class ConfigManager {
      * @return die Materials als Liste
      */
     public List<Material> getCheckpointTriggerPlates() {
-        return getListFromConfig("checkpoint-triggers-plates");
+        return getListFromConfig("checkpoint-trigger-plates");
     }
 
     /**
