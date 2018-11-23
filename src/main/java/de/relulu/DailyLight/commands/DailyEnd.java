@@ -44,6 +44,8 @@ public class DailyEnd implements CommandExecutor {
 				
 				dman.removePlayerStartTime(p.getDisplayName());
 				dman.removePlayerCheck(p.getDisplayName());
+
+				// bedingungslos immer verwundbar zurücksetzen, für den Fall dass während eines Parkous die Config geändert wird
 				p.setInvulnerable(false);
 				p.playSound(p.getLocation(), Sound.UI_TOAST_CHALLENGE_COMPLETE, 0.5f, 1);
 				
@@ -71,6 +73,8 @@ public class DailyEnd implements CommandExecutor {
 						
 						dman.removePlayerStartTime(targetplayer.getDisplayName());
 						dman.removePlayerCheck(targetplayer.getDisplayName());
+
+                        // bedingungslos immer verwundbar zurücksetzen, für den Fall dass während eines Parkous die Config geändert wird
 						targetplayer.setInvulnerable(false);
 						targetplayer.playSound(targetplayer.getLocation(), Sound.UI_TOAST_CHALLENGE_COMPLETE, 0.5f, 1);
 						
