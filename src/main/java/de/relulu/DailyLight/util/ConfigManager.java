@@ -82,11 +82,19 @@ public class ConfigManager {
     }
 
     /**
-     * Holt die Liste der Checkpoint-Trigger (Holzknöpfe, Holzdruckplatten)
+     * Holt die Liste der Checkpoint-Trigger (Holzknöpfe)
      * @return die Materials als Liste
      */
-    public List<Material> getCheckpointTriggerMaterials() {
-	    return getListFromConfig("checkpoint-triggers");
+    public List<Material> getCheckpointTriggerButtons() {
+	    return getListFromConfig("checkpoint-triggers-buttons");
+    }
+
+    /**
+     * Holt die Liste der Checkpoint-Trigger (Holzdruckplatten)
+     * @return die Materials als Liste
+     */
+    public List<Material> getCheckpointTriggerPlates() {
+        return getListFromConfig("checkpoint-triggers-plates");
     }
 
     /**
