@@ -33,9 +33,9 @@ public class DailyManager {
 		this.di = di;
 		this.dcoman = new ConfigManager(di.getConfig());
 		this.mh = new MessageHandler(
-		        di.getConfig().getString("message-prefix", ""),
+		        di.getConfig().getString("message-prefix", "&6[&rDailyLight&6]"),
                 di.getConfig().getString("primary-color", "§e"),
-                di.getConfig().getString("secondary-color", "§r")
+                di.getConfig().getString("secondary-format", "§r")
         );
 	}
 	
