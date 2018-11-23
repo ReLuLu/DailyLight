@@ -53,6 +53,8 @@ public class DailyInit extends JavaPlugin {
      */
 	@Override
 	public void onDisable() {
+        getLogger().info("Saving configuration file...");
+        this.saveConfig();
 		getLogger().info(pdf.getName() + " version " + pdf.getVersion() + " disabled! :C");
 	}
 	
