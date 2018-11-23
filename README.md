@@ -21,3 +21,5 @@ Befehle
 * **_/dcheck_** Teleportiert den Spieler zum letzten Checkpoint (oder Startpunkt falls kein Checkpoint erreicht wurde)
 
 * **_/dend_** Beendet den Parkour des Spielers und gibt dessen Dauer seit /dstart an
+
+* **_/daily ?_** Listet administrative Befehle auf
