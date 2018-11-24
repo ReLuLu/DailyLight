@@ -5,14 +5,16 @@ import java.io.FileOutputStream;
 import java.io.InputStream;
 import java.io.OutputStream;
 
-import de.relulu.DailyLight.commands.DailyConfig;
+import com.google.common.io.ByteStreams;
+
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.PluginDescriptionFile;
 import org.bukkit.plugin.java.JavaPlugin;
 
-import com.google.common.io.ByteStreams;
-
+import de.relulu.DailyLight.commands.DailyAdmin;
+import de.relulu.DailyLight.util.ConfigLists;
+import de.relulu.DailyLight.util.ConfigManager;
 import de.relulu.DailyLight.commands.DailyCheck;
 import de.relulu.DailyLight.commands.DailyEnd;
 import de.relulu.DailyLight.commands.DailyStart;
@@ -25,7 +27,7 @@ import de.relulu.DailyLight.commands.DailyStart;
  */
 public class DailyInit extends JavaPlugin {
 	
-	public FileConfiguration 		cfg = getConfig();
+	private FileConfiguration 		cfg = getConfig();
 	private PluginDescriptionFile 	pdf = getDescription(); //damit nicht immer via getDescription was abgerufen wird
 	
 	/**
@@ -38,10 +40,13 @@ public class DailyInit extends JavaPlugin {
 	    	cfg = getConfig();
 	    }
 
-		DailyManager dman = new DailyManager(this);
+	    // erst die Konfigurationsklassen schrittweise erzeugen
+        ConfigManager confman = new ConfigManager(this.getConfig(), new ConfigLists(this));
+		// dann den DailyManager erzeugen
+		DailyManager dman = new DailyManager(this, confman);
 		
         getServer().getPluginManager().registerEvents(new DailyListener(dman), this);
-        this.getCommand("daily").setExecutor(new DailyConfig(dman));
+        this.getCommand("daily").setExecutor(new DailyAdmin(dman));
         this.getCommand("dcheck").setExecutor(new DailyCheck(dman));
         this.getCommand("dstart").setExecutor(new DailyStart(dman));
         this.getCommand("dend").setExecutor(new DailyEnd(dman));
@@ -53,18 +58,11 @@ public class DailyInit extends JavaPlugin {
      */
 	@Override
 	public void onDisable() {
-        getLogger().info("Saving configuration file...");
-        this.saveConfig();
+        //getLogger().info("Saving configuration file...");
+        //this.saveConfig();
 		getLogger().info(pdf.getName() + " version " + pdf.getVersion() + " disabled! :C");
 	}
-	
-	/**
-	 * Soll Zugriff auf die Konfiguration gewähren.
-	 */
-	public FileConfiguration passConfig() {
-		return this.cfg;
-	}
-	
+
     /**
      * Erstellt die Standardkonfig config.yml im Plugin-Verzeichnis 
      * sofern diese noch nicht existiert. Nutzt dafür die integrierte Vorlage.
