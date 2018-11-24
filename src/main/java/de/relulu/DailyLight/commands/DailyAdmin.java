@@ -1,13 +1,14 @@
 package de.relulu.DailyLight.commands;
 
-
-import de.relulu.DailyLight.util.ConfigManager;
-import de.relulu.DailyLight.DailyManager;
-import de.relulu.DailyLight.util.MessageHandler;
+import org.bukkit.Material;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+
+import de.relulu.DailyLight.util.ConfigManager;
+import de.relulu.DailyLight.DailyManager;
+import de.relulu.DailyLight.util.MessageHandler;
 
 /**
  * Diese Klasse handhabt die Befehle hinter /daily
@@ -15,13 +16,13 @@ import org.bukkit.entity.Player;
  * @author ReLuLu
  *
  */
-public class DailyConfig implements CommandExecutor {
+public class DailyAdmin implements CommandExecutor {
 
         private DailyManager dman;
         private MessageHandler mh;
         private ConfigManager dconf;
 
-        public DailyConfig(DailyManager dman) {
+        public DailyAdmin(DailyManager dman) {
             this.dman = dman;
             this.mh = dman.getMessageHandler();
             this.dconf = dman.getConfigManager();
@@ -125,22 +126,31 @@ public class DailyConfig implements CommandExecutor {
 
                                 break;
 
-                            case "debug":
+                            // ausgeben, welche Buttons als Checkpoint erkannt werden
+                            case "checkbuttons":
 
-                                // für Zeug was nur zum Debugging gebraucht wird
-                                mh.tell(p, "Buttons");
-                                for(Object o : dconf.getCheckpointTriggerButtons()) {
-                                    mh.tell(p, o.toString());
+                                mh.tell(p, mh.getPrimaryColor() + "Buttons:");
+                                for(Material m : dconf.getCheckpointTriggerButtons()) {
+                                    mh.tell(p, mh.getSecondaryFormat() + m);
                                 }
-                                mh.tell(p, "Druckplatten");
-                                for(Object o : dconf.getCheckpointTriggerPlates()) {
-                                    mh.tell(p, o.toString());
-                                }
-                                mh.tell(p, "Antigrief");
-                                for(Object o : dconf.getAntiGriefMaterials()) {
-                                    mh.tell(p, o.toString());
-                                }
+                                break;
 
+                            // ausgeben, welche Druckplatten als Checkpoint erkannt werden
+                            case "checkplates":
+
+                                mh.tell(p, mh.getPrimaryColor() + "Druckplatten:");
+                                for(Material m : dconf.getCheckpointTriggerPlates()) {
+                                    mh.tell(p, mh.getSecondaryFormat() + m);
+                                }
+                                break;
+
+                            // ausgeben, welche Objekte, Blöcke, Entities durch Antigrief geschützt sind
+                            case "antigriefobjects":
+
+                                mh.tell(p, mh.getPrimaryColor() + "Antigrief:");
+                                for(Material m : dconf.getAntiGriefMaterials()) {
+                                    mh.tell(p, mh.getSecondaryFormat() + m);
+                                }
                                 break;
 
                             // wenn kein Unterbefehl zutrifft, dann gib die Befehlsliste aus
@@ -164,13 +174,15 @@ public class DailyConfig implements CommandExecutor {
      * @param cs der, der den Befehl ausgeführt hat
      */
     private void helpMessage(CommandSender cs) {
-            mh.tell(cs, mh.getPrimaryColor() + "Administrative Daily-Befehle");
-            mh.tell(cs, mh.getPrimaryColor() + "/daily start <Spielername>");
-            mh.tell(cs, mh.getPrimaryColor() + "/daily end <Spielername>");
-            mh.tell(cs, mh.getPrimaryColor() + "/daily nodamage <true|false>");
-            mh.tell(cs, mh.getPrimaryColor() + "/daily nohunger <true|false>");
-            mh.tell(cs, mh.getPrimaryColor() + "/daily antigrief <true|false>");
-
-        }
+        mh.tell(cs, mh.getPrimaryColor() + "Administrative Daily-Befehle");
+        mh.tell(cs, mh.getPrimaryColor() + "/daily start <Spielername>");
+        mh.tell(cs, mh.getPrimaryColor() + "/daily end <Spielername>");
+        mh.tell(cs, mh.getPrimaryColor() + "/daily nodamage <true|false>");
+        mh.tell(cs, mh.getPrimaryColor() + "/daily nohunger <true|false>");
+        mh.tell(cs, mh.getPrimaryColor() + "/daily antigrief <true|false>");
+        mh.tell(cs, mh.getPrimaryColor() + "/daily checkbuttons");
+        mh.tell(cs, mh.getPrimaryColor() + "/daily checkplates");
+        mh.tell(cs, mh.getPrimaryColor() + "/daily antigriefobjects");
+    }
 
 }
