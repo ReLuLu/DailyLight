@@ -1,10 +1,9 @@
 package de.relulu.DailyLight.util;
 
+import java.util.List;
+
 import org.bukkit.Material;
 import org.bukkit.configuration.file.FileConfiguration;
-
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Diese Klasse kümmert sich um das Auslesen und Bereitstellen von Konfigurationsparametern
@@ -15,15 +14,30 @@ import java.util.List;
 public class ConfigManager {
 	
 	private FileConfiguration cfg;
-	
+	private ConfigLists conflist;
+
 	/**
 	 * Konstruktor für für den Konfigurationsmanager
 	 * 
 	 * @param fcfg die Konfigurationsdatei
+     * @param conflist die ConfigLists Klasse
 	 */
-	public ConfigManager(FileConfiguration fcfg) {
+	public ConfigManager(FileConfiguration fcfg, ConfigLists conflist) {
 		this.cfg = fcfg;
+		this.conflist = conflist;
 	}
+
+    /**
+     * Gibt die ConfigLists zurück, um Zugriff
+     * auf listenbasierte Konfigurationsinhalte
+     * zu ermöglichen
+     *
+     * @return conflist ConfigLists
+     * @deprecated
+     */
+    public ConfigLists getConfigLists() {
+        return this.conflist;
+    }
 
 	/**
 	 * Setzt die nodamage-Variable
@@ -74,42 +88,27 @@ public class ConfigManager {
 	}
 
     /**
-     * Holt die Liste der antigrief-Materials (Blumentöpfe, ..)
-     * @return die Materials als Liste
-     */
-	public List<Material> getAntiGriefMaterials() {
-	    return getListFromConfig("decoration-antigrief-materials");
-    }
-
-    /**
-     * Holt die Liste der Checkpoint-Trigger (Holzknöpfe)
+     * Holt die Liste der Checkpoint-Trigger (Holzknöpfe) aus der ConfigLists Klasse
      * @return die Materials als Liste
      */
     public List<Material> getCheckpointTriggerButtons() {
-	    return getListFromConfig("checkpoint-trigger-buttons");
+        return conflist.getCheckpointTriggerButtons();
     }
 
     /**
-     * Holt die Liste der Checkpoint-Trigger (Holzdruckplatten)
+     * Holt die Liste der Checkpoint-Trigger (Holzdruckplatten) aus der ConfigLists Klasse
      * @return die Materials als Liste
      */
     public List<Material> getCheckpointTriggerPlates() {
-        return getListFromConfig("checkpoint-trigger-plates");
+        return conflist.getCheckpointTriggerPlates();
     }
 
     /**
-     * Liest eine Liste aus der Konfigurationsdatei aus
-     * @param cfgpath der config-path der Liste
-     * @return die Liste mit Materials
+     * Holt die Liste der antigrief-Materials (Blumentöpfe, ..) aus der ConfigLists Klasse
+     * @return die Materials als Liste
      */
-	private List<Material> getListFromConfig(String cfgpath) {
-
-        List<?> templist = cfg.getList(cfgpath);
-        List<Material> list = new ArrayList<>();
-        for(Object o : templist) {
-            list.add(Material.matchMaterial((String)o));
-        }
-        return list;
+    public List<Material> getAntiGriefMaterials() {
+        return conflist.getAntiGriefMaterials();
     }
 
 
