@@ -1,11 +1,5 @@
 package de.relulu.DailyLight;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-
-import de.relulu.DailyLight.util.ConfigManager;
-import de.relulu.DailyLight.util.MessageHandler;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
@@ -19,6 +13,9 @@ import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.block.data.type.Switch;
 import org.bukkit.block.data.type.Switch.Face;
 
+import de.relulu.DailyLight.util.ConfigManager;
+import de.relulu.DailyLight.util.MessageHandler;
+
 /**
  * Diese Klasse stellt den Listener für aufkommende Events, die von diesem
  * Plugin verarbeitet werden sollen.
@@ -30,7 +27,7 @@ public class DailyListener implements Listener {
 	
 	private DailyManager dman;
 	private MessageHandler mh;
-	private ConfigManager dconf;
+	private ConfigManager confman;
 
     /**
      * Konstruktor für den Listener
@@ -39,58 +36,8 @@ public class DailyListener implements Listener {
     public DailyListener(DailyManager dman) {
         this.dman = dman;
         this.mh = dman.getMessageHandler();
-        this.dconf = dman.getConfigManager();
-        try {
-            // probieren die Listen aus der Config auszulesen...
-            this.triggerbuttons = dconf.getCheckpointTriggerButtons();
-            this.triggerplates = dconf.getCheckpointTriggerPlates();
-            this.antigriefmaterials = dconf.getAntiGriefMaterials();
-        } catch(Exception e) {
-            // wenns fehlschlägt dann implizit füllen
-            // Liste aller gültigen Knöpfe für Checkpoints
-            this.triggerbuttons = new ArrayList<>(Arrays.asList(
-                    Material.OAK_BUTTON, Material.BIRCH_BUTTON, Material.SPRUCE_BUTTON,
-                    Material.DARK_OAK_BUTTON, Material.JUNGLE_BUTTON, Material.ACACIA_BUTTON
-            ));
-
-            // Liste aller gültigen Druckplatten für Checkpoints
-            this.triggerplates = new ArrayList<>(Arrays.asList(
-                    Material.OAK_PRESSURE_PLATE, Material.BIRCH_PRESSURE_PLATE,
-                    Material.SPRUCE_PRESSURE_PLATE, Material.DARK_OAK_PRESSURE_PLATE,
-                    Material.JUNGLE_PRESSURE_PLATE, Material.ACACIA_PRESSURE_PLATE
-            ));
-
-            // Liste aller Topfpflanzen für den gm2 Deko-Schutz
-            this.antigriefmaterials = new ArrayList<>(Arrays.asList(
-                    Material.POTTED_ACACIA_SAPLING,
-                    Material.POTTED_ALLIUM,
-                    Material.POTTED_AZURE_BLUET,
-                    Material.POTTED_BIRCH_SAPLING,
-                    Material.POTTED_BLUE_ORCHID,
-                    Material.POTTED_BROWN_MUSHROOM,
-                    Material.POTTED_CACTUS,
-                    Material.POTTED_DANDELION,
-                    Material.POTTED_DARK_OAK_SAPLING,
-                    Material.POTTED_DEAD_BUSH,
-                    Material.POTTED_FERN,
-                    Material.POTTED_JUNGLE_SAPLING,
-                    Material.POTTED_OAK_SAPLING,
-                    Material.POTTED_ORANGE_TULIP,
-                    Material.POTTED_OXEYE_DAISY,
-                    Material.POTTED_PINK_TULIP,
-                    Material.POTTED_POPPY,
-                    Material.POTTED_RED_MUSHROOM,
-                    Material.POTTED_RED_TULIP,
-                    Material.POTTED_SPRUCE_SAPLING,
-                    Material.POTTED_WHITE_TULIP,
-                    Material.FLOWER_POT
-            ));
-        }
+        this.confman = dman.getConfigManager();
 	}
-
-    private List<Material> triggerbuttons;
-    private List<Material> triggerplates;
-    private List<Material> antigriefmaterials;
 
     /**
 	 * Player interagiert bzw. löst etwas aus
@@ -108,7 +55,7 @@ public class DailyListener implements Listener {
 			Material m = pie.getClickedBlock().getType();
 
 			// wenn der Block in der Knopfliste ist
-			if(triggerbuttons.contains(m)) {
+			if(confman.getCheckpointTriggerButtons().contains(m)) {
 				
 				// Den geklickten Block auf Switch casten
 				Switch sw = (Switch)bl.getState().getBlockData();
@@ -145,7 +92,7 @@ public class DailyListener implements Listener {
 			}
 
 			// wenn der Block in der Topfpflanzenliste ist
-			else if(antigriefmaterials.contains(m)) {
+			else if(confman.getAntiGriefMaterials().contains(m)) {
 
 				// wenn der Spieler sich im Parkour befindet
 				if(dman.isPlayerInDaily(p.getDisplayName())) {
@@ -161,7 +108,7 @@ public class DailyListener implements Listener {
 			Block bl = pie.getClickedBlock();
 			Material m = pie.getClickedBlock().getType();
 			
-			if(triggerplates.contains(m)) {
+			if(confman.getCheckpointTriggerPlates().contains(m)) {
 				
 				// Druckplatten sind ja immer auf einem Untergrund, daher DOWN
 				if(bl.getRelative(BlockFace.DOWN).getType() == Material.GOLD_BLOCK) {
@@ -187,7 +134,7 @@ public class DailyListener implements Listener {
 	public void onHunger(FoodLevelChangeEvent flce) {
 
 	    // nur wenn es in der Konfiguration aktiviert ist
-        if(dconf.getNoHunger()) {
+        if(confman.getNoHunger()) {
 
             // welche Entity löst das Event aus
             HumanEntity he = flce.getEntity();
