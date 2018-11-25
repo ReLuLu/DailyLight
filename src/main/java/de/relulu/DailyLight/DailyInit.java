@@ -1,14 +1,8 @@
 package de.relulu.DailyLight;
 
 import java.io.File;
-import java.io.FileOutputStream;
-import java.io.InputStream;
-import java.io.OutputStream;
-
-import com.google.common.io.ByteStreams;
 
 import org.bukkit.configuration.file.FileConfiguration;
-import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.PluginDescriptionFile;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -27,7 +21,7 @@ import de.relulu.DailyLight.commands.DailyStart;
  */
 public class DailyInit extends JavaPlugin {
 	
-	private FileConfiguration 		cfg = getConfig();
+	private FileConfiguration 		cfg;
 	private PluginDescriptionFile 	pdf = getDescription(); //damit nicht immer via getDescription was abgerufen wird
 	
 	/**
@@ -35,13 +29,13 @@ public class DailyInit extends JavaPlugin {
 	 */
 	@Override
 	public void onEnable() {
-	    createConfig();
+	    createDefaultConfig();
 		if(cfg == null) {
 	    	cfg = getConfig();
 	    }
 
 	    // erst die Konfigurationsklassen schrittweise erzeugen
-        ConfigManager confman = new ConfigManager(this.getConfig(), new ConfigLists(this));
+        ConfigManager confman = new ConfigManager(this, this.getConfig(), new ConfigLists(this));
 		// dann den DailyManager erzeugen
 		DailyManager dman = new DailyManager(this, confman);
 		
@@ -67,7 +61,7 @@ public class DailyInit extends JavaPlugin {
      * Erstellt die Standardkonfig config.yml im Plugin-Verzeichnis 
      * sofern diese noch nicht existiert. Nutzt dafür die integrierte Vorlage.
      */
-    private void createConfig() {
+    private void createDefaultConfig() {
         try {
             if (!getDataFolder().exists()) {
                 getDataFolder().mkdirs();
@@ -82,38 +76,6 @@ public class DailyInit extends JavaPlugin {
         } catch (Exception e) {
             e.printStackTrace();
         }
-    }
-    
-    /**
-     * Loads a resource with file name from JAR if it doesn't exist in your plugin's data folder.
-     * https://www.spigotmc.org/threads/how-do-i-add-comments-to-my-config-file.38849/#post-446819
-     * 
-     * For YAML files, this preserves comments, as it copies the raw file. You can load it as a 
-     * FileConfiguration with YamlConfiguration.loadConfiguration(). Basically, just replace 
-     * saveDefaultConfig() with this, and override getConfig() to return this instead. 
-     * Instead of using methods to create your default config, do it by hand.
-     * 
-     * @param plugin
-     * @param resource
-     * @return
-     */
-    public static File loadResource(Plugin plugin, String resource) {
-        File folder = plugin.getDataFolder();
-        if (!folder.exists())
-            folder.mkdir();
-        File resourceFile = new File(folder, resource);
-        try {
-            if (!resourceFile.exists()) {
-                resourceFile.createNewFile();
-                try (InputStream in = plugin.getResource(resource);
-                     OutputStream out = new FileOutputStream(resourceFile)) {
-                    ByteStreams.copy(in, out);
-                }
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return resourceFile;
     }
     
 }
