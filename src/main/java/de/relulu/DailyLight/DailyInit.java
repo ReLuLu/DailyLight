@@ -1,17 +1,14 @@
 package de.relulu.DailyLight;
 
 import java.io.File;
-import java.io.FileOutputStream;
-import java.io.InputStream;
-import java.io.OutputStream;
 
 import org.bukkit.configuration.file.FileConfiguration;
-import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.PluginDescriptionFile;
 import org.bukkit.plugin.java.JavaPlugin;
 
-import com.google.common.io.ByteStreams;
-
+import de.relulu.DailyLight.commands.DailyAdmin;
+import de.relulu.DailyLight.util.ConfigLists;
+import de.relulu.DailyLight.util.ConfigManager;
 import de.relulu.DailyLight.commands.DailyCheck;
 import de.relulu.DailyLight.commands.DailyEnd;
 import de.relulu.DailyLight.commands.DailyStart;
@@ -24,7 +21,7 @@ import de.relulu.DailyLight.commands.DailyStart;
  */
 public class DailyInit extends JavaPlugin {
 	
-	public FileConfiguration 		cfg = getConfig();
+	private FileConfiguration 		cfg;
 	private PluginDescriptionFile 	pdf = getDescription(); //damit nicht immer via getDescription was abgerufen wird
 	
 	/**
@@ -32,14 +29,18 @@ public class DailyInit extends JavaPlugin {
 	 */
 	@Override
 	public void onEnable() {
-	    createConfig();
+	    createDefaultConfig();
 		if(cfg == null) {
 	    	cfg = getConfig();
 	    }
 
-		DailyManager dman = new DailyManager(this);
+	    // erst die Konfigurationsklassen schrittweise erzeugen
+        ConfigManager confman = new ConfigManager(this, this.getConfig(), new ConfigLists(this));
+		// dann den DailyManager erzeugen
+		DailyManager dman = new DailyManager(this, confman);
 		
         getServer().getPluginManager().registerEvents(new DailyListener(dman), this);
+        this.getCommand("daily").setExecutor(new DailyAdmin(dman));
         this.getCommand("dcheck").setExecutor(new DailyCheck(dman));
         this.getCommand("dstart").setExecutor(new DailyStart(dman));
         this.getCommand("dend").setExecutor(new DailyEnd(dman));
@@ -51,21 +52,16 @@ public class DailyInit extends JavaPlugin {
      */
 	@Override
 	public void onDisable() {
+        //getLogger().info("Saving configuration file...");
+        //this.saveConfig();
 		getLogger().info(pdf.getName() + " version " + pdf.getVersion() + " disabled! :C");
 	}
-	
-	/**
-	 * Soll Zugriff auf die Konfiguration gewähren.
-	 */
-	public FileConfiguration passConfig() {
-		return this.cfg;
-	}
-	
+
     /**
      * Erstellt die Standardkonfig config.yml im Plugin-Verzeichnis 
      * sofern diese noch nicht existiert. Nutzt dafür die integrierte Vorlage.
      */
-    private void createConfig() {
+    private void createDefaultConfig() {
         try {
             if (!getDataFolder().exists()) {
                 getDataFolder().mkdirs();
@@ -80,38 +76,6 @@ public class DailyInit extends JavaPlugin {
         } catch (Exception e) {
             e.printStackTrace();
         }
-    }
-    
-    /**
-     * Loads a resource with file name from JAR if it doesn't exist in your plugin's data folder.
-     * https://www.spigotmc.org/threads/how-do-i-add-comments-to-my-config-file.38849/#post-446819
-     * 
-     * For YAML files, this preserves comments, as it copies the raw file. You can load it as a 
-     * FileConfiguration with YamlConfiguration.loadConfiguration(). Basically, just replace 
-     * saveDefaultConfig() with this, and override getConfig() to return this instead. 
-     * Instead of using methods to create your default config, do it by hand.
-     * 
-     * @param plugin
-     * @param resource
-     * @return
-     */
-    public static File loadResource(Plugin plugin, String resource) {
-        File folder = plugin.getDataFolder();
-        if (!folder.exists())
-            folder.mkdir();
-        File resourceFile = new File(folder, resource);
-        try {
-            if (!resourceFile.exists()) {
-                resourceFile.createNewFile();
-                try (InputStream in = plugin.getResource(resource);
-                     OutputStream out = new FileOutputStream(resourceFile)) {
-                    ByteStreams.copy(in, out);
-                }
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return resourceFile;
     }
     
 }

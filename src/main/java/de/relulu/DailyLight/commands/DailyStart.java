@@ -1,5 +1,6 @@
 package de.relulu.DailyLight.commands;
 
+import de.relulu.DailyLight.util.ConfigManager;
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -19,10 +20,12 @@ public class DailyStart implements CommandExecutor {
 	
 	private DailyManager dman;
 	private MessageHandler mh;
+	private ConfigManager dconf;
 	
 	public DailyStart(DailyManager dman) {
 		this.dman = dman;
 		this.mh = dman.getMessageHandler();
+		this.dconf = dman.getConfigManager();
 	}
 
 	/**
@@ -42,9 +45,17 @@ public class DailyStart implements CommandExecutor {
 				
 				dman.setPlayerCheck(p.getDisplayName(), p.getLocation());
 				dman.setPlayerStartTime(p.getDisplayName());
-				p.setInvulnerable(true);
-				p.setFoodLevel(20); // Hunger auf standardmäßig 10 Keulen auffüllen
-				
+
+				// unverwundbar setzen wenn aktiv
+				if(dconf.getNoDamage()) {
+                    p.setInvulnerable(true);
+                }
+
+                // Hunger auf 10 Keulen auffüllen wenn aktiv
+                if(dconf.getNoHunger()) {
+                    p.setFoodLevel(20);
+                }
+
 				return true;
 				
 			// wenn der Befehl mit Parameter daherkommt
@@ -75,9 +86,16 @@ public class DailyStart implements CommandExecutor {
 						dman.setPlayerCheck(targetplayer.getDisplayName(), targetplayer.getLocation());
 						
 						dman.setPlayerStartTime(targetplayer.getDisplayName());
-						
-						// Spieler unverwundbar setzen
-						targetplayer.setInvulnerable(true);
+
+                        // unverwundbar setzen wenn aktiv
+						if(dconf.getNoDamage()) {
+                            targetplayer.setInvulnerable(true);
+                        }
+
+                        // Hunger auf 10 Keulen auffüllen wenn aktiv
+                        if(dconf.getNoHunger()) {
+                            targetplayer.setFoodLevel(20);
+                        }
 						
 						return true;
 

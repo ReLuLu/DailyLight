@@ -7,8 +7,10 @@ import java.util.List;
 import java.util.Map;
 import java.util.logging.Logger;
 
-import de.relulu.DailyLight.util.MessageHandler;
 import org.bukkit.Location;
+
+import de.relulu.DailyLight.util.ConfigManager;
+import de.relulu.DailyLight.util.MessageHandler;
 
 /**
  * Eine Klasse zur Verwaltung der Informationen und so.
@@ -17,24 +19,27 @@ import org.bukkit.Location;
  *
  */
 public class DailyManager {
-	
-	private DailyInit di;
-	private DailyConfigManager dcoman;
 
+	private ConfigManager confman;
 	private MessageHandler mh;
-	
 	private Logger log;
 	
-	private HashMap<String, Location> playerchecks = new HashMap<String, Location>();
-	private HashMap<String, Date> playertimes = new HashMap<String, Date>();
-	
-	public DailyManager(DailyInit di) {
-		this.di = di;
-		this.dcoman = new DailyConfigManager(di.getConfig());
+	private HashMap<String, Location> playerchecks = new HashMap<>();
+	private HashMap<String, Date> playertimes = new HashMap<>();
+
+    /**
+     * DailyManager Konstruktor mit Instanz vom Plugin und dem ConfigManager
+     *
+     * @param di DailyInit Instanz
+     * @param confman ConfigManager Klasse
+     */
+	public DailyManager(DailyInit di, ConfigManager confman) {
+		this.log = di.getLogger();
+		this.confman = confman;
 		this.mh = new MessageHandler(
-		        di.getConfig().getString("message-prefix", ""),
+		        di.getConfig().getString("message-prefix", "&6[&rDailyLight&6]"),
                 di.getConfig().getString("primary-color", "§e"),
-                di.getConfig().getString("secondary-color", "§r")
+                di.getConfig().getString("secondary-format", "§r")
         );
 	}
 	
@@ -58,15 +63,15 @@ public class DailyManager {
     }
 
 	/**
-	 * Gibt den DailyConfigManager zurück, um Zugriff 
+	 * Gibt den ConfigManager zurück, um Zugriff
 	 * auf Konfigurationsinhalte zu ermöglichen
 	 * 
-	 * @return dcoman DailyConfigManager
+	 * @return confman ConfigManager
 	 */
-	public DailyConfigManager getConfigManager() {
-		return this.dcoman;
+	public ConfigManager getConfigManager() {
+		return this.confman;
 	}
-	
+
 	/**
 	 * Setzt einen Spieler Start-Zeitstempel Datensatz
 	 * 
@@ -101,7 +106,7 @@ public class DailyManager {
 	 * @param pln Spielername als String
 	 * @return true wenn der Spielername in der internen Zeitmessungs-HashMap vorhanden ist, false wenn nicht
 	 */
-	public boolean isPlayerInDaily(String pln) {
+	protected boolean isPlayerInDaily(String pln) {
 		
 		return playertimes.containsKey(pln);
 	}
@@ -191,36 +196,6 @@ public class DailyManager {
                 mh.getSecondaryFormat() + elapsedMinutes + mh.getPrimaryColor() + " Minuten, " +
                 mh.getSecondaryFormat() + elapsedSeconds + mh.getPrimaryColor() + " Sekunden");
 
-	}
-	
-	/**
-	 * Eine Debug-Methode, um den aktuell gespeicherten Checkpoint zum Spieler ausgeben zu lassen
-	 * 
-	 * @param pln Spielername als String
-	 * @return playercheckinfo formatierter String mit Spielername und Location des zugehörigen Checkpoints
-	 */
-	public String getPlayerCheckLocationInfo(String pln) {
-		String playercheckinfo = "";
-		
-		if(playerchecks.containsKey(pln)) {
-			Location loc = playerchecks.get(pln);
-			String x = String.valueOf(loc.getX());
-			String y = String.valueOf(loc.getY());
-			String z = String.valueOf(loc.getZ());
-		    String xyz = mh.getSecondaryFormat() + x
-                    + mh.getPrimaryColor() + " / "
-                    + mh.getSecondaryFormat() + y
-		    		+ mh.getPrimaryColor() + " / " +
-                    mh.getSecondaryFormat() + z
-                    + " " + mh.getSecondaryFormat();
-		    
-		    playercheckinfo = String.join(" ", this.getConfigManager().getMessagePrefix() 
-		    		+ "    §r" + pln 
-		    		+ mh.getPrimaryColor()
-		    		+ " @ §r" + xyz);
-		}
-		
-		return playercheckinfo;
 	}
 	
 	/**

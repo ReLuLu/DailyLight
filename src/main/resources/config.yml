@@ -1,5 +1,7 @@
 #DailyLight Configuration File
-
+#
+# IF SOMETHING BREAKS, DELETE THIS FILE, IT WILL BE REGENERATED ON RESTART
+#
 # prefix message in chat
 message-prefix: '&6[&rDailyLight&6]'
 
@@ -8,3 +10,61 @@ primary-color: '&e'
 
 # secondary format of chat messages
 secondary-format: '&r'
+
+# prevents a player from dealing damage due to damage sources (e.g. fall, fire, attack, ..)
+# only active between /dstart and /dend
+player-nodamage: true
+
+# prevents a player from getting hungry so he doesn't need food to keep running
+# only active between /dstart and /dend
+player-nohunger: true
+
+# prevents decoration stuff like flower pots from getting griefed in gamemode 2
+# only active between /dstart and /dend
+decoration-antigrief: true
+
+# antigrief-materials
+# DO NOT EDIT UNLESS YOU KNOW WHAT YOU ARE DOING!
+decoration-antigrief-materials:
+  - POTTED_ACACIA_SAPLING
+  - POTTED_ALLIUM
+  - POTTED_AZURE_BLUET
+  - POTTED_BIRCH_SAPLING
+  - POTTED_BLUE_ORCHID
+  - POTTED_BROWN_MUSHROOM
+  - POTTED_CACTUS
+  - POTTED_DANDELION
+  - POTTED_DARK_OAK_SAPLING
+  - POTTED_DEAD_BUSH
+  - POTTED_FERN
+  - POTTED_JUNGLE_SAPLING
+  - POTTED_OAK_SAPLING
+  - POTTED_ORANGE_TULIP
+  - POTTED_OXEYE_DAISY
+  - POTTED_PINK_TULIP
+  - POTTED_POPPY
+  - POTTED_RED_MUSHROOM
+  - POTTED_RED_TULIP
+  - POTTED_SPRUCE_SAPLING
+  - POTTED_WHITE_TULIP
+  - FLOWER_POT
+
+# materials (buttons) that trigger a checkpoint
+# DO NOT EDIT UNLESS YOU KNOW WHAT YOU ARE DOING!
+checkpoint-trigger-buttons:
+  - OAK_BUTTON
+  - BIRCH_BUTTON
+  - SPRUCE_BUTTON
+  - DARK_OAK_BUTTON
+  - JUNGLE_BUTTON
+  - ACACIA_BUTTON
+
+# materials (pressure plates) that trigger a checkpoint
+# DO NOT EDIT UNLESS YOU KNOW WHAT YOU ARE DOING!
+checkpoint-trigger-plates:
+  - OAK_PRESSURE_PLATE
+  - BIRCH_PRESSURE_PLATE
+  - SPRUCE_PRESSURE_PLATE
+  - DARK_OAK_PRESSURE_PLATE
+  - JUNGLE_PRESSURE_PLATE
+  - ACACIA_PRESSURE_PLATE
