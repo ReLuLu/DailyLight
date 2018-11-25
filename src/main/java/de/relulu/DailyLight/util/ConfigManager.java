@@ -5,6 +5,8 @@ import java.util.List;
 import org.bukkit.Material;
 import org.bukkit.configuration.file.FileConfiguration;
 
+import de.relulu.DailyLight.DailyInit;
+
 /**
  * Diese Klasse kümmert sich um das Auslesen und Bereitstellen von Konfigurationsparametern
  * 
@@ -12,7 +14,8 @@ import org.bukkit.configuration.file.FileConfiguration;
  *
  */
 public class ConfigManager {
-	
+
+    private DailyInit di;
 	private FileConfiguration cfg;
 	private ConfigLists conflist;
 
@@ -22,8 +25,9 @@ public class ConfigManager {
 	 * @param fcfg die Konfigurationsdatei
      * @param conflist die ConfigLists Klasse
 	 */
-	public ConfigManager(FileConfiguration fcfg, ConfigLists conflist) {
-		this.cfg = fcfg;
+	public ConfigManager(DailyInit di, FileConfiguration fcfg, ConfigLists conflist) {
+		this.di = di;
+	    this.cfg = fcfg;
 		this.conflist = conflist;
 	}
 
@@ -45,6 +49,7 @@ public class ConfigManager {
 	 */
 	public void setNoDamage(boolean b) {
 		cfg.set("player-nodamage", b);
+		di.saveConfig();
 	}
 
 	/**
@@ -61,6 +66,7 @@ public class ConfigManager {
 	 */
 	public void setNoHunger(boolean b) {
 		cfg.set("player-nohunger", b);
+        di.saveConfig();
 	}
 
 	/**
@@ -77,6 +83,7 @@ public class ConfigManager {
 	 */
 	public void setAntiGrief(boolean b) {
 		cfg.set("decoration-antigrief", b);
+        di.saveConfig();
 	}
 
 	/**
@@ -110,7 +117,5 @@ public class ConfigManager {
     public List<Material> getAntiGriefMaterials() {
         return conflist.getAntiGriefMaterials();
     }
-
-
 
 }
