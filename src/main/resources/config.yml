@@ -1,5 +1,7 @@
 #DailyLight Configuration File
-
+#
+# IF SOMETHING BREAKS, DELETE THIS FILE, IT WILL BE REGENERATED ON RESTART
+#
 # prefix message in chat
 message-prefix: '&6[&rDailyLight&6]'
 
