@@ -18,14 +18,12 @@ import de.relulu.DailyLight.util.MessageHandler;
  */
 public class DailyAdmin implements CommandExecutor {
 
-        private DailyManager dman;
         private MessageHandler mh;
-        private ConfigManager dconf;
+        private ConfigManager confman;
 
         public DailyAdmin(DailyManager dman) {
-            this.dman = dman;
             this.mh = dman.getMessageHandler();
-            this.dconf = dman.getConfigManager();
+            this.confman = dman.getConfigManager();
         }
 
         /**
@@ -58,9 +56,9 @@ public class DailyAdmin implements CommandExecutor {
                             case "start":
 
                                 if(comparams.length == 1) {
-                                    p.performCommand("/dstart");
+                                    p.performCommand("dstart");
                                 } else if(comparams.length == 2) {
-                                    p.performCommand("/dstart " + comparams[1]);
+                                    p.performCommand("dstart " + comparams[1]);
                                 }
 
                                 break;
@@ -68,9 +66,9 @@ public class DailyAdmin implements CommandExecutor {
                             case "end":
 
                                 if(comparams.length == 1) {
-                                    p.performCommand("/dend");
+                                    p.performCommand("dend");
                                 } else if(comparams.length == 2) {
-                                    p.performCommand("/dend " + comparams[1]);
+                                    p.performCommand("dend " + comparams[1]);
                                 }
 
                                 break;
@@ -80,14 +78,15 @@ public class DailyAdmin implements CommandExecutor {
                                 // wenn der Befehl ohne Parameter zum Unterbefehl daherkommt
                                 if (comparams.length == 1) {
                                     mh.tell(p, mh.getPrimaryColor() + "Spieler sind gegen Schäden immun: "
-                                            + mh.getSecondaryFormat() + dconf.getNoDamage());
+                                            + mh.getSecondaryFormat() + confman.getNoDamage());
                                 }
 
                                 // wenn der Befehl genau 2 Parameter hat (=Unterbefehl + Wert)
                                 else if (comparams.length == 2) {
-                                    dconf.setNoDamage(Boolean.valueOf(comparams[1]));
+                                    confman.setNoDamage(Boolean.valueOf(comparams[1]));
                                     mh.tell(p, mh.getPrimaryColor() + "Spieler sind gegen Schäden immun: "
-                                            + mh.getSecondaryFormat() + dconf.getNoDamage());
+                                            + mh.getSecondaryFormat() + confman.getNoDamage());
+                                    mh.tell(p, mh.getPrimaryColor() + "Änderungen erst bei erneutem Parkours-Start wirksam.");
                                 }
 
                                 break;
@@ -97,14 +96,14 @@ public class DailyAdmin implements CommandExecutor {
                                 // wenn der Befehl ohne Parameter zum Unterbefehl daherkommt
                                 if (comparams.length == 1) {
                                     mh.tell(p, mh.getPrimaryColor() + "Spieler bekommen keinen Hunger: "
-                                            + mh.getSecondaryFormat() + dconf.getNoHunger());
+                                            + mh.getSecondaryFormat() + confman.getNoHunger());
                                 }
 
                                 // wenn der Befehl genau 2 Parameter hat (=Unterbefehl + Wert)
                                 else if (comparams.length == 2) {
-                                    dconf.setNoHunger(Boolean.valueOf(comparams[1]));
+                                    confman.setNoHunger(Boolean.valueOf(comparams[1]));
                                     mh.tell(p, mh.getPrimaryColor() + "Spieler bekommen keinen Hunger: "
-                                            + mh.getSecondaryFormat() + dconf.getNoHunger());
+                                            + mh.getSecondaryFormat() + confman.getNoHunger());
                                 }
 
                                 break;
@@ -114,14 +113,14 @@ public class DailyAdmin implements CommandExecutor {
                                 // wenn der Befehl ohne Parameter zum Unterbefehl daherkommt
                                 if (comparams.length == 1) {
                                     mh.tell(p, mh.getPrimaryColor() + "Antigrief: "
-                                            + mh.getSecondaryFormat() + dconf.getAntiGrief());
+                                            + mh.getSecondaryFormat() + confman.getAntiGrief());
                                 }
 
                                 // wenn der Befehl genau 2 Parameter hat (=Unterbefehl + Wert)
                                 else if (comparams.length == 2) {
-                                    dconf.setAntiGrief(Boolean.valueOf(comparams[1]));
+                                    confman.setAntiGrief(Boolean.valueOf(comparams[1]));
                                     mh.tell(p, mh.getPrimaryColor() + "Antigrief: "
-                                            + mh.getSecondaryFormat() + dconf.getAntiGrief());
+                                            + mh.getSecondaryFormat() + confman.getAntiGrief());
                                 }
 
                                 break;
@@ -130,7 +129,7 @@ public class DailyAdmin implements CommandExecutor {
                             case "checkbuttons":
 
                                 mh.tell(p, mh.getPrimaryColor() + "Buttons:");
-                                for(Material m : dconf.getCheckpointTriggerButtons()) {
+                                for(Material m : confman.getCheckpointTriggerButtons()) {
                                     mh.tell(p, mh.getSecondaryFormat() + m);
                                 }
                                 break;
@@ -139,7 +138,7 @@ public class DailyAdmin implements CommandExecutor {
                             case "checkplates":
 
                                 mh.tell(p, mh.getPrimaryColor() + "Druckplatten:");
-                                for(Material m : dconf.getCheckpointTriggerPlates()) {
+                                for(Material m : confman.getCheckpointTriggerPlates()) {
                                     mh.tell(p, mh.getSecondaryFormat() + m);
                                 }
                                 break;
@@ -148,7 +147,7 @@ public class DailyAdmin implements CommandExecutor {
                             case "antigriefobjects":
 
                                 mh.tell(p, mh.getPrimaryColor() + "Antigrief:");
-                                for(Material m : dconf.getAntiGriefMaterials()) {
+                                for(Material m : confman.getAntiGriefMaterials()) {
                                     mh.tell(p, mh.getSecondaryFormat() + m);
                                 }
                                 break;
@@ -174,15 +173,15 @@ public class DailyAdmin implements CommandExecutor {
      * @param cs der, der den Befehl ausgeführt hat
      */
     private void helpMessage(CommandSender cs) {
-        mh.tell(cs, mh.getPrimaryColor() + "Administrative Daily-Befehle");
-        mh.tell(cs, mh.getPrimaryColor() + "/daily start <Spielername>");
-        mh.tell(cs, mh.getPrimaryColor() + "/daily end <Spielername>");
-        mh.tell(cs, mh.getPrimaryColor() + "/daily nodamage <true|false>");
-        mh.tell(cs, mh.getPrimaryColor() + "/daily nohunger <true|false>");
-        mh.tell(cs, mh.getPrimaryColor() + "/daily antigrief <true|false>");
-        mh.tell(cs, mh.getPrimaryColor() + "/daily checkbuttons");
-        mh.tell(cs, mh.getPrimaryColor() + "/daily checkplates");
-        mh.tell(cs, mh.getPrimaryColor() + "/daily antigriefobjects");
+        mh.tell(cs, "Administrative Daily-Befehle");
+        mh.tell(cs, mh.getPrimaryColor() + "/" + mh.getSecondaryFormat() + "daily " + mh.getPrimaryColor() + "start " + "<" + mh.getSecondaryFormat() + "Spielername" + mh.getPrimaryColor() + ">");
+        mh.tell(cs, mh.getPrimaryColor() + "/" + mh.getSecondaryFormat() + "daily " + mh.getPrimaryColor() + "end <" + mh.getSecondaryFormat() + "Spielername" + mh.getPrimaryColor() + ">");
+        mh.tell(cs, mh.getPrimaryColor() + "/" + mh.getSecondaryFormat() + "daily " + mh.getPrimaryColor() + "nodamage <" + mh.getSecondaryFormat() + "true" + mh.getPrimaryColor() + "|" + mh.getSecondaryFormat() + "false" + mh.getPrimaryColor() + ">");
+        mh.tell(cs, mh.getPrimaryColor() + "/" + mh.getSecondaryFormat() + "daily " + mh.getPrimaryColor() + "nohunger <" + mh.getSecondaryFormat() + "true" + mh.getPrimaryColor() + "|" + mh.getSecondaryFormat() + "false" + mh.getPrimaryColor() + ">");
+        mh.tell(cs, mh.getPrimaryColor() + "/" + mh.getSecondaryFormat() + "daily " + mh.getPrimaryColor() + "antigrief <" + mh.getSecondaryFormat() + "true" + mh.getPrimaryColor() + "|" + mh.getSecondaryFormat() + "false" + mh.getPrimaryColor() + ">");
+        mh.tell(cs, mh.getPrimaryColor() + "/" + mh.getSecondaryFormat() + "daily " + mh.getPrimaryColor() + "checkbuttons");
+        mh.tell(cs, mh.getPrimaryColor() + "/" + mh.getSecondaryFormat() + "daily " + mh.getPrimaryColor() + "checkplates");
+        mh.tell(cs, mh.getPrimaryColor() + "/" + mh.getSecondaryFormat() + "daily " + mh.getPrimaryColor() + "antigriefobjects");
     }
 
 }
