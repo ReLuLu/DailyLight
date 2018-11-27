@@ -167,7 +167,7 @@ public class DailyAdmin implements CommandExecutor {
                                     + mh.getSecondaryFormat() + pdf.getVersion()
                                     + mh.getPrimaryColor() + " von "
                                     + mh.getSecondaryFormat() + authors.toString());
-                            mh.tell(p,  mh.getPrimaryColor() + "DailyLight auf GitHub:  "
+                            mh.tell(p,  mh.getPrimaryColor() + "DailyLight auf GitHub: "
                                     + mh.getSecondaryFormat() + "https://github.com/ReLuLu/DailyLight");
                             break;
 
