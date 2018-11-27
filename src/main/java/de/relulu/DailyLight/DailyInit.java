@@ -40,7 +40,7 @@ public class DailyInit extends JavaPlugin {
 		DailyManager dman = new DailyManager(this, confman);
 		
         getServer().getPluginManager().registerEvents(new DailyListener(dman), this);
-        this.getCommand("daily").setExecutor(new DailyAdmin(dman));
+        this.getCommand("daily").setExecutor(new DailyAdmin(dman, pdf));
         this.getCommand("dcheck").setExecutor(new DailyCheck(dman));
         this.getCommand("dstart").setExecutor(new DailyStart(dman));
         this.getCommand("dend").setExecutor(new DailyEnd(dman));
