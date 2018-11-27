@@ -66,6 +66,16 @@ public class DailyAdmin implements CommandExecutor {
 
                             break;
 
+                        case "check":
+
+                            if(comparams.length == 1) {
+                                p.performCommand("dcheck");
+                            } else if(comparams.length == 2) {
+                                p.performCommand("dcheck " + comparams[1]);
+                            }
+
+                            break;
+
                         case "end":
 
                             if(comparams.length == 1) {
@@ -194,6 +204,7 @@ public class DailyAdmin implements CommandExecutor {
     private void helpMessage(CommandSender cs) {
         mh.tell(cs, "Administrative Daily-Befehle");
         mh.tell(cs, mh.getPrimaryColor() + "/" + mh.getSecondaryFormat() + "daily " + mh.getPrimaryColor() + "start " + "<" + mh.getSecondaryFormat() + "Spielername" + mh.getPrimaryColor() + ">");
+        mh.tell(cs, mh.getPrimaryColor() + "/" + mh.getSecondaryFormat() + "daily " + mh.getPrimaryColor() + "check " + "<" + mh.getSecondaryFormat() + "Spielername" + mh.getPrimaryColor() + ">");
         mh.tell(cs, mh.getPrimaryColor() + "/" + mh.getSecondaryFormat() + "daily " + mh.getPrimaryColor() + "end <" + mh.getSecondaryFormat() + "Spielername" + mh.getPrimaryColor() + ">");
         mh.tell(cs, mh.getPrimaryColor() + "/" + mh.getSecondaryFormat() + "daily " + mh.getPrimaryColor() + "nodamage <" + mh.getSecondaryFormat() + "true" + mh.getPrimaryColor() + "|" + mh.getSecondaryFormat() + "false" + mh.getPrimaryColor() + ">");
         mh.tell(cs, mh.getPrimaryColor() + "/" + mh.getSecondaryFormat() + "daily " + mh.getPrimaryColor() + "nohunger <" + mh.getSecondaryFormat() + "true" + mh.getPrimaryColor() + "|" + mh.getSecondaryFormat() + "false" + mh.getPrimaryColor() + ">");
