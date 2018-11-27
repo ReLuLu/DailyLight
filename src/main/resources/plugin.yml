@@ -1,8 +1,11 @@
 name: DailyLight
 main: de.relulu.DailyLight.DailyInit
 version: ${project.version}
-api-version: 1.13
 author: ReLuLu
+
+website: https://github.com/ReLuLu/DailyLight
+api-version: 1.13
+
 commands:
   daily:
     description: Provides access to administrative daily commands and prints an overview of them.
