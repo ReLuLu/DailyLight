@@ -157,10 +157,16 @@ public class DailyAdmin implements CommandExecutor {
 
                         case "version":
 
+                            StringBuilder authors = new StringBuilder();
+                            for(String s : pdf.getAuthors()) {
+                                authors.append(s);
+                                authors.append("  ");
+                            }
+
                             mh.tell(p, "DailyLight Version "
                                     + mh.getSecondaryFormat() + pdf.getVersion()
                                     + mh.getPrimaryColor() + " von "
-                                    + mh.getSecondaryFormat() + pdf.getAuthors());
+                                    + mh.getSecondaryFormat() + authors.toString());
                             mh.tell(p,  mh.getPrimaryColor() + "DailyLight auf GitHub:  "
                                     + mh.getSecondaryFormat() + "https://github.com/ReLuLu/DailyLight");
                             break;
