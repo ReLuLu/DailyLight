@@ -5,6 +5,7 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+import org.bukkit.plugin.PluginDescriptionFile;
 
 import de.relulu.DailyLight.util.ConfigManager;
 import de.relulu.DailyLight.DailyManager;
@@ -18,155 +19,167 @@ import de.relulu.DailyLight.util.MessageHandler;
  */
 public class DailyAdmin implements CommandExecutor {
 
-        private MessageHandler mh;
-        private ConfigManager confman;
+    private MessageHandler mh;
+    private ConfigManager confman;
+    private PluginDescriptionFile pdf;
 
-        public DailyAdmin(DailyManager dman) {
-            this.mh = dman.getMessageHandler();
-            this.confman = dman.getConfigManager();
-        }
+    public DailyAdmin(DailyManager dman, PluginDescriptionFile pdf) {
+        this.mh = dman.getMessageHandler();
+        this.confman = dman.getConfigManager();
+        this.pdf = pdf;
+    }
 
-        /**
-         * Handelt den daily Befehl sowie Unterbefehle ab
-         */
-        @Override
-        public boolean onCommand(CommandSender sender, Command command, String comname, String[] comparams) {
+    /**
+     * Handelt den daily Befehl sowie Unterbefehle ab
+     */
+    @Override
+    public boolean onCommand(CommandSender sender, Command command, String comname, String[] comparams) {
 
-            if(sender instanceof Player) {
+        if(sender instanceof Player) {
 
-                Player p = (Player)sender;
+            Player p = (Player)sender;
 
-                if(p.isOp()) {
+            if(p.isOp()) {
 
-                    // wenn der Befehl ohne Parameter (=Unterbefehl) daherkommt
-                    if(comparams.length < 1) {
-                        // dann gib die Hilfe aus
-                        helpMessage(p);
+                // wenn der Befehl ohne Parameter (=Unterbefehl) daherkommt
+                if(comparams.length < 1) {
+                    // dann gib die Hilfe aus
+                    helpMessage(p);
+                }
+
+                // wenn der Befehl mit mind. 1 Parameter (=Unterbefehl + Parameter) daherkommt
+                else {
+
+                    // Unterbefehl auslesen und zwischenspeichern
+                    String subcommand = comparams[0];
+
+                    // den Unterbefehl switchen
+                    switch (subcommand) {
+
+                        case "start":
+
+                            if(comparams.length == 1) {
+                                p.performCommand("dstart");
+                            } else if(comparams.length == 2) {
+                                p.performCommand("dstart " + comparams[1]);
+                            }
+
+                            break;
+
+                        case "end":
+
+                            if(comparams.length == 1) {
+                                p.performCommand("dend");
+                            } else if(comparams.length == 2) {
+                                p.performCommand("dend " + comparams[1]);
+                            }
+
+                            break;
+
+                        case "nodamage":
+
+                            // wenn der Befehl ohne Parameter zum Unterbefehl daherkommt
+                            if (comparams.length == 1) {
+                                mh.tell(p, mh.getPrimaryColor() + "Spieler sind gegen Schäden immun: "
+                                        + mh.getSecondaryFormat() + confman.getNoDamage());
+                            }
+
+                            // wenn der Befehl genau 2 Parameter hat (=Unterbefehl + Wert)
+                            else if (comparams.length == 2) {
+                                confman.setNoDamage(Boolean.valueOf(comparams[1]));
+                                mh.tell(p, mh.getPrimaryColor() + "Spieler sind gegen Schäden immun: "
+                                        + mh.getSecondaryFormat() + confman.getNoDamage());
+                                mh.tell(p, mh.getPrimaryColor() + "Änderungen erst bei erneutem Parkours-Start wirksam.");
+                            }
+
+                            break;
+
+                        case "nohunger":
+
+                            // wenn der Befehl ohne Parameter zum Unterbefehl daherkommt
+                            if (comparams.length == 1) {
+                                mh.tell(p, mh.getPrimaryColor() + "Spieler bekommen keinen Hunger: "
+                                        + mh.getSecondaryFormat() + confman.getNoHunger());
+                            }
+
+                            // wenn der Befehl genau 2 Parameter hat (=Unterbefehl + Wert)
+                            else if (comparams.length == 2) {
+                                confman.setNoHunger(Boolean.valueOf(comparams[1]));
+                                mh.tell(p, mh.getPrimaryColor() + "Spieler bekommen keinen Hunger: "
+                                        + mh.getSecondaryFormat() + confman.getNoHunger());
+                            }
+
+                            break;
+
+                        case "antigrief":
+
+                            // wenn der Befehl ohne Parameter zum Unterbefehl daherkommt
+                            if (comparams.length == 1) {
+                                mh.tell(p, mh.getPrimaryColor() + "Antigrief: "
+                                        + mh.getSecondaryFormat() + confman.getAntiGrief());
+                            }
+
+                            // wenn der Befehl genau 2 Parameter hat (=Unterbefehl + Wert)
+                            else if (comparams.length == 2) {
+                                confman.setAntiGrief(Boolean.valueOf(comparams[1]));
+                                mh.tell(p, mh.getPrimaryColor() + "Antigrief: "
+                                        + mh.getSecondaryFormat() + confman.getAntiGrief());
+                            }
+
+                            break;
+
+                        // ausgeben, welche Buttons als Checkpoint erkannt werden
+                        case "checkbuttons":
+
+                            mh.tell(p, mh.getPrimaryColor() + "Buttons:");
+                            for(Material m : confman.getCheckpointTriggerButtons()) {
+                                mh.tell(p, mh.getSecondaryFormat() + m);
+                            }
+                            break;
+
+                        // ausgeben, welche Druckplatten als Checkpoint erkannt werden
+                        case "checkplates":
+
+                            mh.tell(p, mh.getPrimaryColor() + "Druckplatten:");
+                            for(Material m : confman.getCheckpointTriggerPlates()) {
+                                mh.tell(p, mh.getSecondaryFormat() + m);
+                            }
+                            break;
+
+                        // ausgeben, welche Objekte, Blöcke, Entities durch Antigrief geschützt sind
+                        case "antigriefobjects":
+
+                            mh.tell(p, mh.getPrimaryColor() + "Antigrief:");
+                            for(Material m : confman.getAntiGriefMaterials()) {
+                                mh.tell(p, mh.getSecondaryFormat() + m);
+                            }
+                            break;
+
+                        case "version":
+
+                            mh.tell(p, "DailyLight Version "
+                                    + mh.getSecondaryFormat() + pdf.getVersion()
+                                    + mh.getPrimaryColor() + " von "
+                                    + mh.getSecondaryFormat() + pdf.getAuthors());
+                            mh.tell(p,  mh.getPrimaryColor() + "DailyLight auf GitHub:  "
+                                    + mh.getSecondaryFormat() + "https://github.com/ReLuLu/DailyLight");
+                            break;
+
+                        // wenn kein Unterbefehl zutrifft, dann gib die Befehlsliste aus
+                        default:
+                            helpMessage(p);
+                            break;
+
                     }
-
-                    // wenn der Befehl mit mind. 1 Parameter (=Unterbefehl + Parameter) daherkommt
-                    else {
-
-                        // Unterbefehl auslesen und zwischenspeichern
-                        String subcommand = comparams[0];
-
-                        // den Unterbefehl switchen
-                        switch (subcommand) {
-
-                            case "start":
-
-                                if(comparams.length == 1) {
-                                    p.performCommand("dstart");
-                                } else if(comparams.length == 2) {
-                                    p.performCommand("dstart " + comparams[1]);
-                                }
-
-                                break;
-
-                            case "end":
-
-                                if(comparams.length == 1) {
-                                    p.performCommand("dend");
-                                } else if(comparams.length == 2) {
-                                    p.performCommand("dend " + comparams[1]);
-                                }
-
-                                break;
-
-                            case "nodamage":
-
-                                // wenn der Befehl ohne Parameter zum Unterbefehl daherkommt
-                                if (comparams.length == 1) {
-                                    mh.tell(p, mh.getPrimaryColor() + "Spieler sind gegen Schäden immun: "
-                                            + mh.getSecondaryFormat() + confman.getNoDamage());
-                                }
-
-                                // wenn der Befehl genau 2 Parameter hat (=Unterbefehl + Wert)
-                                else if (comparams.length == 2) {
-                                    confman.setNoDamage(Boolean.valueOf(comparams[1]));
-                                    mh.tell(p, mh.getPrimaryColor() + "Spieler sind gegen Schäden immun: "
-                                            + mh.getSecondaryFormat() + confman.getNoDamage());
-                                    mh.tell(p, mh.getPrimaryColor() + "Änderungen erst bei erneutem Parkours-Start wirksam.");
-                                }
-
-                                break;
-
-                            case "nohunger":
-
-                                // wenn der Befehl ohne Parameter zum Unterbefehl daherkommt
-                                if (comparams.length == 1) {
-                                    mh.tell(p, mh.getPrimaryColor() + "Spieler bekommen keinen Hunger: "
-                                            + mh.getSecondaryFormat() + confman.getNoHunger());
-                                }
-
-                                // wenn der Befehl genau 2 Parameter hat (=Unterbefehl + Wert)
-                                else if (comparams.length == 2) {
-                                    confman.setNoHunger(Boolean.valueOf(comparams[1]));
-                                    mh.tell(p, mh.getPrimaryColor() + "Spieler bekommen keinen Hunger: "
-                                            + mh.getSecondaryFormat() + confman.getNoHunger());
-                                }
-
-                                break;
-
-                            case "antigrief":
-
-                                // wenn der Befehl ohne Parameter zum Unterbefehl daherkommt
-                                if (comparams.length == 1) {
-                                    mh.tell(p, mh.getPrimaryColor() + "Antigrief: "
-                                            + mh.getSecondaryFormat() + confman.getAntiGrief());
-                                }
-
-                                // wenn der Befehl genau 2 Parameter hat (=Unterbefehl + Wert)
-                                else if (comparams.length == 2) {
-                                    confman.setAntiGrief(Boolean.valueOf(comparams[1]));
-                                    mh.tell(p, mh.getPrimaryColor() + "Antigrief: "
-                                            + mh.getSecondaryFormat() + confman.getAntiGrief());
-                                }
-
-                                break;
-
-                            // ausgeben, welche Buttons als Checkpoint erkannt werden
-                            case "checkbuttons":
-
-                                mh.tell(p, mh.getPrimaryColor() + "Buttons:");
-                                for(Material m : confman.getCheckpointTriggerButtons()) {
-                                    mh.tell(p, mh.getSecondaryFormat() + m);
-                                }
-                                break;
-
-                            // ausgeben, welche Druckplatten als Checkpoint erkannt werden
-                            case "checkplates":
-
-                                mh.tell(p, mh.getPrimaryColor() + "Druckplatten:");
-                                for(Material m : confman.getCheckpointTriggerPlates()) {
-                                    mh.tell(p, mh.getSecondaryFormat() + m);
-                                }
-                                break;
-
-                            // ausgeben, welche Objekte, Blöcke, Entities durch Antigrief geschützt sind
-                            case "antigriefobjects":
-
-                                mh.tell(p, mh.getPrimaryColor() + "Antigrief:");
-                                for(Material m : confman.getAntiGriefMaterials()) {
-                                    mh.tell(p, mh.getSecondaryFormat() + m);
-                                }
-                                break;
-
-                            // wenn kein Unterbefehl zutrifft, dann gib die Befehlsliste aus
-                            default:
-                                helpMessage(p);
-                                break;
-
-                        }
-
-                    }
-
 
                 }
-            }
 
-            return true;
+
+            }
         }
+
+        return true;
+    }
 
     /**
      * Gibt eine Auflistung administrativer Befehle des Plugins aus.
