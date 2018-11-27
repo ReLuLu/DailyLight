@@ -1,5 +1,7 @@
 package de.relulu.DailyLight;
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -209,9 +211,9 @@ public class DailyManager {
 		for (Map.Entry<String, Location> entry : playerchecks.entrySet()) {
 		    String key = entry.getKey();
 		    Location value = entry.getValue();
-			String x = String.valueOf(value.getX());
-			String y = String.valueOf(value.getY());
-			String z = String.valueOf(value.getZ());
+			String x = String.valueOf(new BigDecimal(value.getX()).setScale(5, RoundingMode.HALF_UP));
+			String y = String.valueOf(new BigDecimal(value.getY()).setScale(5, RoundingMode.HALF_UP));
+			String z = String.valueOf(new BigDecimal(value.getZ()).setScale(5, RoundingMode.HALF_UP));
 		    String xyz = mh.getSecondaryFormat() + x
                     + mh.getPrimaryColor() + " / "
                     + mh.getSecondaryFormat() + y
