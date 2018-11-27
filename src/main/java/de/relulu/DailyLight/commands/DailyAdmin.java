@@ -195,6 +195,7 @@ public class DailyAdmin implements CommandExecutor {
         mh.tell(cs, mh.getPrimaryColor() + "/" + mh.getSecondaryFormat() + "daily " + mh.getPrimaryColor() + "checkbuttons");
         mh.tell(cs, mh.getPrimaryColor() + "/" + mh.getSecondaryFormat() + "daily " + mh.getPrimaryColor() + "checkplates");
         mh.tell(cs, mh.getPrimaryColor() + "/" + mh.getSecondaryFormat() + "daily " + mh.getPrimaryColor() + "antigriefobjects");
+        mh.tell(cs, mh.getPrimaryColor() + "/" + mh.getSecondaryFormat() + "daily " + mh.getPrimaryColor() + "version");
     }
 
 }
