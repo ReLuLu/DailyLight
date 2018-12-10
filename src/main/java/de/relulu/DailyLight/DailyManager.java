@@ -173,7 +173,9 @@ public class DailyManager {
 			st = playertimes.get(pln);
 		} else {
 			//st = new Date(); // neues, aktuelles Datum setzen
-			return(mh.getPrimaryColor() + "Keine Startzeit!");
+			return(mh.getSecondaryFormat()
+					+ "keine Startzeit"
+					+ mh.getPrimaryColor() + "!");
 		}
 		
 		long duration = et.getTime() - st.getTime();

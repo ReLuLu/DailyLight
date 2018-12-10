@@ -1,15 +1,23 @@
 package de.relulu.DailyLight.commands;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
+
+import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
+import org.bukkit.command.TabCompleter;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.PluginDescriptionFile;
 
-import de.relulu.DailyLight.util.ConfigManager;
 import de.relulu.DailyLight.DailyManager;
+import de.relulu.DailyLight.util.ConfigManager;
 import de.relulu.DailyLight.util.MessageHandler;
+import org.bukkit.util.StringUtil;
 
 /**
  * Diese Klasse handhabt die Befehle hinter /daily
@@ -17,11 +25,24 @@ import de.relulu.DailyLight.util.MessageHandler;
  * @author ReLuLu
  *
  */
-public class DailyAdmin implements CommandExecutor {
+public class DailyAdmin implements CommandExecutor, TabCompleter {
 
     private MessageHandler mh;
     private ConfigManager confman;
     private PluginDescriptionFile pdf;
+
+    private final List<String> subcommands = new ArrayList<>(Arrays.asList(
+            "start",
+            "check",
+            "end",
+            "nodamage",
+            "nohunger",
+            "antigrief",
+            "checkbuttons",
+            "checkplates",
+            "antigriefobjects",
+            "version"
+    ));
 
     public DailyAdmin(DailyManager dman, PluginDescriptionFile pdf) {
         this.mh = dman.getMessageHandler();
@@ -30,7 +51,12 @@ public class DailyAdmin implements CommandExecutor {
     }
 
     /**
-     * Handelt den daily Befehl sowie Unterbefehle ab
+     * Handelt den /daily-Befehl sowie Unterbefehle ab
+     * @param sender wer hat den Befehl abgesetzt
+     * @param command Befehl als Objekt
+     * @param comname Name des Befehls (/daily)
+     * @param comparams zugehörige Parameter (/daily nodamage status)
+     * @return true
      */
     @Override
     public boolean onCommand(CommandSender sender, Command command, String comname, String[] comparams) {
@@ -96,7 +122,10 @@ public class DailyAdmin implements CommandExecutor {
 
                             // wenn der Befehl genau 2 Parameter hat (=Unterbefehl + Wert)
                             else if (comparams.length == 2) {
-                                confman.setNoDamage(Boolean.valueOf(comparams[1]));
+                                // nur wenn es nicht status ist, weil status keine Änderung machen soll
+                                if(!comparams[1].equalsIgnoreCase("status")) {
+                                    confman.setNoDamage(Boolean.valueOf(comparams[1]));
+                                }
                                 mh.tell(p, mh.getPrimaryColor() + "Spieler sind gegen Schäden immun: "
                                         + mh.getSecondaryFormat() + confman.getNoDamage());
                                 mh.tell(p, mh.getPrimaryColor() + "Änderungen erst bei erneutem Parkours-Start wirksam.");
@@ -114,7 +143,10 @@ public class DailyAdmin implements CommandExecutor {
 
                             // wenn der Befehl genau 2 Parameter hat (=Unterbefehl + Wert)
                             else if (comparams.length == 2) {
-                                confman.setNoHunger(Boolean.valueOf(comparams[1]));
+                                // nur wenn es nicht status ist, weil status keine Änderung machen soll
+                                if(!comparams[1].equalsIgnoreCase("status")) {
+                                    confman.setNoHunger(Boolean.valueOf(comparams[1]));
+                                }
                                 mh.tell(p, mh.getPrimaryColor() + "Spieler bekommen keinen Hunger: "
                                         + mh.getSecondaryFormat() + confman.getNoHunger());
                             }
@@ -131,7 +163,10 @@ public class DailyAdmin implements CommandExecutor {
 
                             // wenn der Befehl genau 2 Parameter hat (=Unterbefehl + Wert)
                             else if (comparams.length == 2) {
-                                confman.setAntiGrief(Boolean.valueOf(comparams[1]));
+                                // nur wenn es nicht status ist, weil status keine Änderung machen soll
+                                if(!comparams[1].equalsIgnoreCase("status")) {
+                                    confman.setAntiGrief(Boolean.valueOf(comparams[1]));
+                                }
                                 mh.tell(p, mh.getPrimaryColor() + "Antigrief: "
                                         + mh.getSecondaryFormat() + confman.getAntiGrief());
                             }
@@ -195,6 +230,61 @@ public class DailyAdmin implements CommandExecutor {
         }
 
         return true;
+    }
+
+    /**
+     * Handhabt die Tab-Vervollständigung des daily-Befehls, um mögliche Unterbefehle sowie Parameter vorschlagen zu lassen
+     * @param sender wer hat den Befehl abgesetzt
+     * @param command Befehl als Objekt
+     * @param comname Name des Befehls (/daily)
+     * @param comparams zugehörige Parameter (/daily nodamage status)
+     * @return tabsuggestions Liste mit möglichen Befehls-/Parametervorschlägen
+     */
+    @Override
+    public List<String> onTabComplete(CommandSender sender, Command command, String comname, String[] comparams) {
+
+        List<String> tabsuggestions = new ArrayList<>();
+
+        // /daily ohne irgendwas, alle Möglichkeiten offen
+        if(comparams.length == 0) {
+            return tabsuggestions;
+        }
+
+        // /daily mit mindestens angefangenem Parameter
+        else if(comparams.length == 1) {
+            StringUtil.copyPartialMatches(comparams[0], subcommands, tabsuggestions);
+            Collections.sort(tabsuggestions);
+        }
+
+        // /daily xy az mit mindestens angefangenem zweitem Parameter
+        else if(comparams.length == 2) {
+
+            // unterscheiden, welcher subcommand es nun ist
+
+            // zunächst start, check und end, da diese die gleiche Vervollständigung geben (online-players)
+            if(comparams[0].equalsIgnoreCase("start")
+                    || comparams[0].equalsIgnoreCase("check")
+                    || comparams[0].equalsIgnoreCase("end")) {
+
+                List<String> players = new ArrayList<>();
+                Bukkit.getOnlinePlayers().forEach(p -> players.add(p.getName()));
+                StringUtil.copyPartialMatches(comparams[1], players, tabsuggestions);
+
+            }
+
+            // dann alle mit booleschen Parameter (nohunger, nodamage, antigrief)
+            else if(comparams[0].equalsIgnoreCase("nohunger")
+                    || comparams[0].equalsIgnoreCase("nodamage")
+                    || comparams[0].equalsIgnoreCase("antigrief")) {
+
+                List<String> getset = new ArrayList<>(Arrays.asList("status", "true", "false"));
+                StringUtil.copyPartialMatches(comparams[1], getset, tabsuggestions);
+
+            }
+
+        }
+
+        return tabsuggestions;
     }
 
     /**
