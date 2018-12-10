@@ -272,7 +272,7 @@ public class DailyAdmin implements CommandExecutor, TabCompleter {
 
             }
 
-            // dann alle mit booleschen Parameter (nohunger, nodamage, antigrief)
+            // dann alle mit booleschen Parametern (nohunger, nodamage, antigrief)
             else if(comparams[0].equalsIgnoreCase("nohunger")
                     || comparams[0].equalsIgnoreCase("nodamage")
                     || comparams[0].equalsIgnoreCase("antigrief")) {
