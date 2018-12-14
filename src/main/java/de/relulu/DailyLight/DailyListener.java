@@ -94,10 +94,14 @@ public class DailyListener implements Listener {
 			// wenn der Block in der Topfpflanzenliste ist
 			else if(confman.getAntiGriefMaterials().contains(m)) {
 
-				// wenn der Spieler sich im Parkour befindet
-				if(dman.isPlayerInDaily(p.getDisplayName())) {
-					pie.setCancelled(true);
-				}
+                // nur wenn es in der Konfiguration aktiviert ist
+				if(confman.getAntiGrief()) {
+
+                    // wenn der Spieler sich im Parkour befindet
+                    if(dman.isPlayerInDaily(p.getDisplayName())) {
+                        pie.setCancelled(true);
+                    }
+                }
 			}
 		}
 		
