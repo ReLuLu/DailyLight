@@ -61,7 +61,7 @@ public class DailyListener implements Listener {
 				Switch sw = (Switch)bl.getState().getBlockData();
 				
 				// Knopf obendrauf aber nicht an der Decke
-				if((sw.getFace() == Face.FLOOR) && (bl.getRelative(BlockFace.DOWN).getType() == Material.GOLD_BLOCK)) {
+				if((sw.getFace() == Face.FLOOR) && (confman.getCheckpointTriggerBlocks().contains(bl.getRelative(BlockFace.DOWN).getType()))) {
 					
 					p.sendMessage(mh.getPrefix()
 							+ mh.getPrimaryColor()
@@ -71,7 +71,7 @@ public class DailyListener implements Listener {
 				}
 				
 				// Knopf drumrum, schaut nach dem Block an dem face wo Knopf dranklebt
-				else if(bl.getRelative(sw.getFacing().getOppositeFace()).getType() == Material.GOLD_BLOCK) {
+				else if(bl.getRelative(confman.getCheckpointTriggerBlocks().contains(sw.getFacing().getOppositeFace()).getType())) {
 					
 					p.sendMessage(mh.getPrefix()
                             + mh.getPrimaryColor()
@@ -80,8 +80,8 @@ public class DailyListener implements Listener {
 					
 				}
 				
-				// Knopf an der Decke aber nur wenn dort ein Goldblock ist
-				else if((sw.getFace() == Face.CEILING) && (bl.getRelative(BlockFace.UP).getType() == Material.GOLD_BLOCK)) {
+				// Knopf an der Decke aber nur wenn dort ein Checkpointblock ist
+				else if((sw.getFace() == Face.CEILING) && (confman.getCheckpointTriggerBlocks().contains(bl.getRelative(BlockFace.UP).getType()))) {
 					
 					p.sendMessage(mh.getPrefix()
                             + mh.getPrimaryColor()
@@ -115,7 +115,7 @@ public class DailyListener implements Listener {
 			if(confman.getCheckpointTriggerPlates().contains(m)) {
 				
 				// Druckplatten sind ja immer auf einem Untergrund, daher DOWN
-				if(bl.getRelative(BlockFace.DOWN).getType() == Material.GOLD_BLOCK) {
+				if(confman.getCheckpointTriggerBlocks().contains(bl.getRelative(BlockFace.DOWN).getType())) {
 					
 					p.sendMessage(mh.getPrefix()
                             + mh.getPrimaryColor()
