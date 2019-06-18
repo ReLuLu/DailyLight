@@ -50,11 +50,13 @@ decoration-antigrief-materials:
   - POTTED_WHITE_TULIP
   - FLOWER_POT
 
-# material of the block being used as checkpoint
-# changing the material here will likely need you to replace
+# material of the blocks being used as checkpoint
+# changing the materials here will likely need you to replace
 # the checkpoint blocks in the map with the new one
+# further allows to add more blocktypes to be used for cps
 # DO NOT EDIT UNLESS YOU KNOW WHAT YOU ARE DOING!
-checkpoint-trigger-blockmaterial: GOLD_BLOCK
+checkpoint-trigger-blockmaterials:
+  - GOLD_BLOCK
 
 # materials (buttons) that trigger a checkpoint
 # manually adding materials enables you to update
