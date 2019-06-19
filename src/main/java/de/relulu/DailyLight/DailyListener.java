@@ -71,7 +71,7 @@ public class DailyListener implements Listener {
 				}
 				
 				// Knopf drumrum, schaut nach dem Block an dem face wo Knopf dranklebt
-				else if(bl.getRelative(confman.getCheckpointTriggerBlocks().contains(sw.getFacing().getOppositeFace()).getType())) {
+				else if(confman.getCheckpointTriggerBlocks().contains(bl.getRelative(sw.getFacing().getOppositeFace()).getType())) {
 					
 					p.sendMessage(mh.getPrefix()
                             + mh.getPrimaryColor()
