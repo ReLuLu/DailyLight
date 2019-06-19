@@ -24,6 +24,7 @@ player-nohunger: true
 decoration-antigrief: true
 
 # antigrief-materials
+# materials below refer to material enum values in spigot
 # DO NOT EDIT UNLESS YOU KNOW WHAT YOU ARE DOING!
 decoration-antigrief-materials:
   - POTTED_ACACIA_SAPLING
@@ -49,7 +50,18 @@ decoration-antigrief-materials:
   - POTTED_WHITE_TULIP
   - FLOWER_POT
 
+# material of the blocks being used as checkpoint
+# changing the materials here will likely need you to replace
+# the checkpoint blocks in the map with the new one
+# further allows to add more blocktypes to be used for cps
+# DO NOT EDIT UNLESS YOU KNOW WHAT YOU ARE DOING!
+checkpoint-trigger-blockmaterials:
+  - GOLD_BLOCK
+
 # materials (buttons) that trigger a checkpoint
+# manually adding materials enables you to update
+# this plugin with upcoming new buttons without
+# touching any hard code
 # DO NOT EDIT UNLESS YOU KNOW WHAT YOU ARE DOING!
 checkpoint-trigger-buttons:
   - OAK_BUTTON
@@ -60,6 +72,9 @@ checkpoint-trigger-buttons:
   - ACACIA_BUTTON
 
 # materials (pressure plates) that trigger a checkpoint
+# manually adding materials enables you to update
+# this plugin with upcoming new pressure plates
+# without touching any hard code
 # DO NOT EDIT UNLESS YOU KNOW WHAT YOU ARE DOING!
 checkpoint-trigger-plates:
   - OAK_PRESSURE_PLATE

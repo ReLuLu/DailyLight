@@ -20,6 +20,7 @@ public class ConfigLists {
 
     private List<Material> triggerbuttons;
     private List<Material> triggerplates;
+    private List<Material> triggerblocks;
     private List<Material> antigriefmaterials;
 
     /**
@@ -42,6 +43,7 @@ public class ConfigLists {
             // probieren die Listen aus der Config auszulesen...
             this.triggerbuttons = this.readCheckpointTriggerButtons();
             this.triggerplates = this.readCheckpointTriggerPlates();
+            this.triggerblocks = this.readCheckpointTriggerBlocks();
             this.antigriefmaterials = this.readAntiGriefMaterials();
             log.info("Material list readout from config.yml successful!");
 
@@ -59,6 +61,11 @@ public class ConfigLists {
                     Material.OAK_PRESSURE_PLATE, Material.BIRCH_PRESSURE_PLATE,
                     Material.SPRUCE_PRESSURE_PLATE, Material.DARK_OAK_PRESSURE_PLATE,
                     Material.JUNGLE_PRESSURE_PLATE, Material.ACACIA_PRESSURE_PLATE
+            ));
+            
+            // Liste aller gültigen Blocktypen für einen Checkpoint
+            this.triggerblocks = new ArrayList<>(Arrays.asList(
+                    Material.GOLD_BLOCK
             ));
 
             // Liste aller Topfpflanzen für den gm2 Deko-Schutz
@@ -112,6 +119,14 @@ public class ConfigLists {
     private List<Material> readCheckpointTriggerPlates() {
         return getListFromConfig("checkpoint-trigger-plates");
     }
+    
+    /**
+     * Liest die Liste der Checkpoint-Blöcke (default Goldblock) aus der config.yml aus
+     * @return die Materials als Liste
+     */
+    private List<Material> readCheckpointTriggerBlocks() {
+        return getListFromConfig("checkpoint-trigger-blockmaterials");
+    }
 
     /**
      * Liest eine Liste aus der Konfigurationsdatei aus
@@ -148,6 +163,14 @@ public class ConfigLists {
      */
     List<Material> getCheckpointTriggerPlates() {
         return this.triggerplates;
+    }
+    
+    /**
+     * Holt die Liste der Checkpoint-Blöcke (default Goldblock)
+     * @return die Materials als Liste
+     */
+    List<Material> getCheckpointTriggerBlocks() {
+        return this.triggerblocks;
     }
 
 }

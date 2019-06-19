@@ -23,7 +23,7 @@ public class ConfigManager {
 	 * Konstruktor für für den Konfigurationsmanager
 	 * 
 	 * @param fcfg die Konfigurationsdatei
-     * @param conflist die ConfigLists Klasse
+    	 * @param conflist die ConfigLists Klasse
 	 */
 	public ConfigManager(DailyInit di, FileConfiguration fcfg, ConfigLists conflist) {
 		this.di = di;
@@ -108,6 +108,14 @@ public class ConfigManager {
      */
     public List<Material> getCheckpointTriggerPlates() {
         return conflist.getCheckpointTriggerPlates();
+    }
+	
+    /**
+     * Holt die Liste der Checkpoint-Trigger (default Goldblock) aus der ConfigLists Klasse
+     * @return die Materials als Liste
+     */
+    public List<Material> getCheckpointTriggerBlocks() {
+        return conflist.getCheckpointTriggerBlocks();
     }
 
     /**
