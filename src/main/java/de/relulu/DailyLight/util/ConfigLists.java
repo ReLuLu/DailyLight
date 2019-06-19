@@ -20,7 +20,7 @@ public class ConfigLists {
 
     private List<Material> triggerbuttons;
     private List<Material> triggerplates;
-    private List<Material> triggerblockmaterials;
+    private List<Material> triggerblocks;
     private List<Material> antigriefmaterials;
 
     /**
@@ -43,7 +43,7 @@ public class ConfigLists {
             // probieren die Listen aus der Config auszulesen...
             this.triggerbuttons = this.readCheckpointTriggerButtons();
             this.triggerplates = this.readCheckpointTriggerPlates();
-            this.triggerblocks = this.readCheckpointTriggerMaterials();
+            this.triggerblocks = this.readCheckpointTriggerBlocks();
             this.antigriefmaterials = this.readAntiGriefMaterials();
             log.info("Material list readout from config.yml successful!");
 
