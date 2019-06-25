@@ -40,6 +40,7 @@ public class DailyAdmin implements CommandExecutor, TabCompleter {
             "antigrief",
             "checkbuttons",
             "checkplates",
+            "checkblocks",
             "antigriefobjects",
             "version"
     ));
@@ -187,6 +188,15 @@ public class DailyAdmin implements CommandExecutor, TabCompleter {
 
                             mh.tell(p, mh.getPrimaryColor() + "Druckplatten:");
                             for(Material m : confman.getCheckpointTriggerPlates()) {
+                                mh.tell(p, mh.getSecondaryFormat() + m);
+                            }
+                            break;
+
+                        // ausgeben, welche Blöcke als Checkpoint erkannt werden
+                        case "checkblocks":
+
+                            mh.tell(p, mh.getPrimaryColor() + "Checkpointblöcke:");
+                            for(Material m : confman.getCheckpointTriggerBlocks()) {
                                 mh.tell(p, mh.getSecondaryFormat() + m);
                             }
                             break;
