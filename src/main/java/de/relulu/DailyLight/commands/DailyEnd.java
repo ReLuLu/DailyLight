@@ -38,24 +38,33 @@ public class DailyEnd implements CommandExecutor {
 			
 			// wenn der Befehl ohne Parameter daherkommt
 			if(comparams.length < 1) {
-				
-				mh.tell(p, mh.getPrimaryColor() + "Parkour beendet in "
-						+ mh.getSecondaryFormat() + dman.getPlayerDurationTime(p.getDisplayName()));
-				
-				dman.removePlayerStartTime(p.getDisplayName());
-				dman.removePlayerCheck(p.getDisplayName());
 
-				// bedingungslos immer verwundbar zurücksetzen, für den Fall dass während eines Parkous die Config geändert wird
-				p.setInvulnerable(false);
-				p.playSound(p.getLocation(), Sound.UI_TOAST_CHALLENGE_COMPLETE, 0.5f, 1);
-				
-				return true;
+				if(p.hasPermission("dailylight.self.end")) {
+
+					mh.tell(p, mh.getPrimaryColor() + "Parkour beendet in "
+							+ mh.getSecondaryFormat() + dman.getPlayerDurationTime(p.getDisplayName()));
+
+					dman.removePlayerStartTime(p.getDisplayName());
+					dman.removePlayerCheck(p.getDisplayName());
+
+					// bedingungslos immer verwundbar zurücksetzen, für den Fall dass während eines Parkous die Config geändert wird
+					p.setInvulnerable(false);
+					p.playSound(p.getLocation(), Sound.UI_TOAST_CHALLENGE_COMPLETE, 0.5f, 1);
+
+					return true;
+
+					// sonst bekommt er eine Meldung, dass ihm die Rechte fehlen
+				} else {
+
+					mh.tell(p, mh.getPrimaryColor() + "Dir fehlen die Rechte, deinen Parkour zu beenden!");
+					return true;
+				}
 				
 			// wenn der Befehl mit Parameter daherkommt
 			} else if(comparams.length == 1) {
 				
 				// nur wenn der Spieler auch Operator ist darf er das
-				if(p.isOp()) {
+				if(p.isOp() || p.hasPermission("dailylight.other.end")) {
 					
 					String targetplayername;
 					targetplayername = comparams[0];
