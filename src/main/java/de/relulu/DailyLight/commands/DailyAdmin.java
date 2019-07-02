@@ -35,6 +35,7 @@ public class DailyAdmin implements CommandExecutor, TabCompleter {
             "start",
             "check",
             "end",
+            "help",
             "nodamage",
             "nohunger",
             "antigrief",
@@ -66,12 +67,28 @@ public class DailyAdmin implements CommandExecutor, TabCompleter {
 
             Player p = (Player)sender;
 
-            if(p.isOp()) {
-
                 // wenn der Befehl ohne Parameter (=Unterbefehl) daherkommt
                 if(comparams.length < 1) {
-                    // dann gib die Hilfe aus
-                    helpMessage(p);
+
+                    // wenn Rechte für Adminhilfe vorliegen
+                    if(p.isOp() || p.hasPermission("dailylight.help.admin")) {
+                        // dann gib die Adminhilfe aus
+                        helpMessageAdmin(p);
+                        return true;
+                    }
+
+                    // wenn zwar keine Rechte für's Adminhelp aber für's Playerhelp vorhanden sind
+                    else if(p.hasPermission("dailylight.help.player")) {
+                        helpMessagePlayer(p);
+                        return true;
+                    }
+
+                    // alternativ liegen wohl keine Rechte vor
+                    else {
+                        mh.tell(p, mh.getPrimaryColor() + "Keine Rechte für die Daily-Hilfe!");
+                        return true;
+                    }
+
                 }
 
                 // wenn der Befehl mit mind. 1 Parameter (=Unterbefehl + Parameter) daherkommt
@@ -85,9 +102,9 @@ public class DailyAdmin implements CommandExecutor, TabCompleter {
 
                         case "start":
 
-                            if(comparams.length == 1) {
+                            if (comparams.length == 1) {
                                 p.performCommand("dstart");
-                            } else if(comparams.length == 2) {
+                            } else if (comparams.length == 2) {
                                 p.performCommand("dstart " + comparams[1]);
                             }
 
@@ -95,9 +112,9 @@ public class DailyAdmin implements CommandExecutor, TabCompleter {
 
                         case "check":
 
-                            if(comparams.length == 1) {
+                            if (comparams.length == 1) {
                                 p.performCommand("dcheck");
-                            } else if(comparams.length == 2) {
+                            } else if (comparams.length == 2) {
                                 p.performCommand("dcheck " + comparams[1]);
                             }
 
@@ -105,138 +122,197 @@ public class DailyAdmin implements CommandExecutor, TabCompleter {
 
                         case "end":
 
-                            if(comparams.length == 1) {
+                            if (comparams.length == 1) {
                                 p.performCommand("dend");
-                            } else if(comparams.length == 2) {
+                            } else if (comparams.length == 2) {
                                 p.performCommand("dend " + comparams[1]);
                             }
 
                             break;
 
+                        case "help":
+
+                            // verweise einfach auf den parameterlosen /daily Befehl
+                            p.performCommand("daily");
+                            break;
+
+                        // ab hier dann jeweils auf Rechte checken
                         case "nodamage":
 
-                            // wenn der Befehl ohne Parameter zum Unterbefehl daherkommt
-                            if (comparams.length == 1) {
-                                mh.tell(p, mh.getPrimaryColor() + "Spieler sind gegen Schäden immun: "
-                                        + mh.getSecondaryFormat() + confman.getNoDamage());
-                            }
+                            if (p.isOp() || p.hasPermission("dailylight.admin.nodamage")) {
 
-                            // wenn der Befehl genau 2 Parameter hat (=Unterbefehl + Wert)
-                            else if (comparams.length == 2) {
-                                // nur wenn es nicht status ist, weil status keine Änderung machen soll
-                                if(!comparams[1].equalsIgnoreCase("status")) {
-                                    confman.setNoDamage(Boolean.valueOf(comparams[1]));
+                                // wenn der Befehl ohne Parameter zum Unterbefehl daherkommt
+                                if (comparams.length == 1) {
+                                    mh.tell(p, mh.getPrimaryColor() + "Spieler sind gegen Schäden immun: "
+                                            + mh.getSecondaryFormat() + confman.getNoDamage());
                                 }
-                                mh.tell(p, mh.getPrimaryColor() + "Spieler sind gegen Schäden immun: "
-                                        + mh.getSecondaryFormat() + confman.getNoDamage());
-                                mh.tell(p, mh.getPrimaryColor() + "Änderungen erst bei erneutem Parkours-Start wirksam.");
-                            }
 
+
+                                // wenn der Befehl genau 2 Parameter hat (=Unterbefehl + Wert)
+                                else if (comparams.length == 2) {
+                                    // nur wenn es nicht status ist, weil status keine Änderung machen soll
+                                    if (!comparams[1].equalsIgnoreCase("status")) {
+                                        confman.setNoDamage(Boolean.valueOf(comparams[1]));
+                                    }
+                                    mh.tell(p, mh.getPrimaryColor() + "Spieler sind gegen Schäden immun: "
+                                            + mh.getSecondaryFormat() + confman.getNoDamage());
+                                    mh.tell(p, mh.getPrimaryColor() + "Änderungen erst bei erneutem Parkours-Start wirksam.");
+                                }
+
+                            // keine Rechte, weder OP noch permissions
+                            } else {
+                                mh.tell(p, mh.getPrimaryColor() + "Keine Berechtigung!");
+                            }
                             break;
 
                         case "nohunger":
 
-                            // wenn der Befehl ohne Parameter zum Unterbefehl daherkommt
-                            if (comparams.length == 1) {
-                                mh.tell(p, mh.getPrimaryColor() + "Spieler bekommen keinen Hunger: "
-                                        + mh.getSecondaryFormat() + confman.getNoHunger());
-                            }
+                            if (p.isOp() || p.hasPermission("dailylight.admin.nohunger")) {
 
-                            // wenn der Befehl genau 2 Parameter hat (=Unterbefehl + Wert)
-                            else if (comparams.length == 2) {
-                                // nur wenn es nicht status ist, weil status keine Änderung machen soll
-                                if(!comparams[1].equalsIgnoreCase("status")) {
-                                    confman.setNoHunger(Boolean.valueOf(comparams[1]));
+                                // wenn der Befehl ohne Parameter zum Unterbefehl daherkommt
+                                if (comparams.length == 1) {
+                                    mh.tell(p, mh.getPrimaryColor() + "Spieler bekommen keinen Hunger: "
+                                            + mh.getSecondaryFormat() + confman.getNoHunger());
                                 }
-                                mh.tell(p, mh.getPrimaryColor() + "Spieler bekommen keinen Hunger: "
-                                        + mh.getSecondaryFormat() + confman.getNoHunger());
-                            }
 
+                                // wenn der Befehl genau 2 Parameter hat (=Unterbefehl + Wert)
+                                else if (comparams.length == 2) {
+                                    // nur wenn es nicht status ist, weil status keine Änderung machen soll
+                                    if (!comparams[1].equalsIgnoreCase("status")) {
+                                        confman.setNoHunger(Boolean.valueOf(comparams[1]));
+                                    }
+                                    mh.tell(p, mh.getPrimaryColor() + "Spieler bekommen keinen Hunger: "
+                                            + mh.getSecondaryFormat() + confman.getNoHunger());
+                                }
+
+                            // keine Rechte, weder OP noch permissions
+                            } else {
+                                mh.tell(p, mh.getPrimaryColor() + "Keine Berechtigung!");
+                            }
                             break;
 
                         case "antigrief":
 
-                            // wenn der Befehl ohne Parameter zum Unterbefehl daherkommt
-                            if (comparams.length == 1) {
-                                mh.tell(p, mh.getPrimaryColor() + "Antigrief: "
-                                        + mh.getSecondaryFormat() + confman.getAntiGrief());
-                            }
+                            if (p.isOp() || p.hasPermission("dailylight.admin.antigrief")) {
 
-                            // wenn der Befehl genau 2 Parameter hat (=Unterbefehl + Wert)
-                            else if (comparams.length == 2) {
-                                // nur wenn es nicht status ist, weil status keine Änderung machen soll
-                                if(!comparams[1].equalsIgnoreCase("status")) {
-                                    confman.setAntiGrief(Boolean.valueOf(comparams[1]));
+                                // wenn der Befehl ohne Parameter zum Unterbefehl daherkommt
+                                if (comparams.length == 1) {
+                                    mh.tell(p, mh.getPrimaryColor() + "Antigrief: "
+                                            + mh.getSecondaryFormat() + confman.getAntiGrief());
                                 }
-                                mh.tell(p, mh.getPrimaryColor() + "Antigrief: "
-                                        + mh.getSecondaryFormat() + confman.getAntiGrief());
-                            }
 
+                                // wenn der Befehl genau 2 Parameter hat (=Unterbefehl + Wert)
+                                else if (comparams.length == 2) {
+                                    // nur wenn es nicht status ist, weil status keine Änderung machen soll
+                                    if (!comparams[1].equalsIgnoreCase("status")) {
+                                        confman.setAntiGrief(Boolean.valueOf(comparams[1]));
+                                    }
+                                    mh.tell(p, mh.getPrimaryColor() + "Antigrief: "
+                                            + mh.getSecondaryFormat() + confman.getAntiGrief());
+                                }
+
+                                // keine Rechte, weder OP noch permissions
+                            } else {
+                                mh.tell(p, mh.getPrimaryColor() + "Keine Berechtigung!");
+                            }
                             break;
 
                         // ausgeben, welche Buttons als Checkpoint erkannt werden
                         case "checkbuttons":
 
-                            mh.tell(p, mh.getPrimaryColor() + "Buttons:");
-                            for(Material m : confman.getCheckpointTriggerButtons()) {
-                                mh.tell(p, mh.getSecondaryFormat() + m);
+                            if (p.isOp() || p.hasPermission("dailylight.admin.checkbuttons")) {
+
+                                mh.tell(p, mh.getPrimaryColor() + "Buttons:");
+                                for (Material m : confman.getCheckpointTriggerButtons()) {
+                                    mh.tell(p, mh.getSecondaryFormat() + m);
+                                }
+
+                            // keine Rechte, weder OP noch permissions
+                            } else {
+                                mh.tell(p, mh.getPrimaryColor() + "Keine Berechtigung!");
                             }
                             break;
 
                         // ausgeben, welche Druckplatten als Checkpoint erkannt werden
                         case "checkplates":
 
-                            mh.tell(p, mh.getPrimaryColor() + "Druckplatten:");
-                            for(Material m : confman.getCheckpointTriggerPlates()) {
-                                mh.tell(p, mh.getSecondaryFormat() + m);
+                            if (p.isOp() || p.hasPermission("dailylight.admin.checkplates")) {
+
+                                mh.tell(p, mh.getPrimaryColor() + "Druckplatten:");
+                                for (Material m : confman.getCheckpointTriggerPlates()) {
+                                    mh.tell(p, mh.getSecondaryFormat() + m);
+                                }
+
+                            // keine Rechte, weder OP noch permissions
+                            } else {
+                                mh.tell(p, mh.getPrimaryColor() + "Keine Berechtigung!");
                             }
                             break;
 
                         // ausgeben, welche Blöcke als Checkpoint erkannt werden
                         case "checkblocks":
 
-                            mh.tell(p, mh.getPrimaryColor() + "Checkpointblöcke:");
-                            for(Material m : confman.getCheckpointTriggerBlocks()) {
-                                mh.tell(p, mh.getSecondaryFormat() + m);
+                            if(p.isOp() || p.hasPermission("dailylight.admin.checkblocks")) {
+
+                                mh.tell(p, mh.getPrimaryColor() + "Checkpointblöcke:");
+                                for (Material m : confman.getCheckpointTriggerBlocks()) {
+                                    mh.tell(p, mh.getSecondaryFormat() + m);
+                                }
+
+                            // keine Rechte, weder OP noch permissions
+                            } else {
+                                mh.tell(p, mh.getPrimaryColor() + "Keine Berechtigung!");
                             }
                             break;
 
                         // ausgeben, welche Objekte, Blöcke, Entities durch Antigrief geschützt sind
                         case "antigriefobjects":
 
-                            mh.tell(p, mh.getPrimaryColor() + "Antigrief:");
-                            for(Material m : confman.getAntiGriefMaterials()) {
-                                mh.tell(p, mh.getSecondaryFormat() + m);
+                            if(p.isOp() || p.hasPermission("dailylight.admin.antigriefobjects")) {
+
+                                mh.tell(p, mh.getPrimaryColor() + "Antigrief:");
+                                for (Material m : confman.getAntiGriefMaterials()) {
+                                    mh.tell(p, mh.getSecondaryFormat() + m);
+                                }
+
+                            // keine Rechte, weder OP noch permissions
+                            } else {
+                                mh.tell(p, mh.getPrimaryColor() + "Keine Berechtigung!");
                             }
                             break;
 
                         case "version":
 
-                            StringBuilder authors = new StringBuilder();
-                            for(String s : pdf.getAuthors()) {
-                                authors.append(s);
-                                authors.append("  ");
-                            }
+                            if(p.isOp() || p.hasPermission("dailylight.admin.version")) {
 
-                            mh.tell(p, "DailyLight Version "
-                                    + mh.getSecondaryFormat() + pdf.getVersion()
-                                    + mh.getPrimaryColor() + " von "
-                                    + mh.getSecondaryFormat() + authors.toString());
-                            mh.tell(p,  mh.getPrimaryColor() + "DailyLight auf GitHub: "
-                                    + mh.getSecondaryFormat() + "https://github.com/ReLuLu/DailyLight");
+                                StringBuilder authors = new StringBuilder();
+                                for (String s : pdf.getAuthors()) {
+                                    authors.append(s);
+                                    authors.append("  ");
+                                }
+
+                                mh.tell(p, "DailyLight Version "
+                                        + mh.getSecondaryFormat() + pdf.getVersion()
+                                        + mh.getPrimaryColor() + " von "
+                                        + mh.getSecondaryFormat() + authors.toString());
+                                mh.tell(p, mh.getPrimaryColor() + "DailyLight auf GitHub: "
+                                        + mh.getSecondaryFormat() + "https://github.com/ReLuLu/DailyLight");
+
+                            // keine Rechte, weder OP noch permissions
+                            } else {
+                                mh.tell(p, mh.getPrimaryColor() + "Keine Berechtigung!");
+                            }
                             break;
 
                         // wenn kein Unterbefehl zutrifft, dann gib die Befehlsliste aus
                         default:
-                            helpMessage(p);
+                            helpMessagePlayer(p);
                             break;
 
                     }
 
                 }
 
-
-            }
         }
 
         return true;
@@ -293,19 +369,29 @@ public class DailyAdmin implements CommandExecutor, TabCompleter {
             }
 
         }
-
         return tabsuggestions;
+    }
+
+    /**
+     * Gibt eine Auflistung von Spielern zu nutzenden Befehlen aus.
+     * @param cs der, der den Befehl ausgeführt hat
+     */
+    private void helpMessagePlayer(CommandSender cs) {
+        mh.tell(cs, "Daily-Befehle");
+        mh.tell(cs, mh.getPrimaryColor() + "/" + mh.getSecondaryFormat() + "daily " + mh.getPrimaryColor() + "start" + mh.getSecondaryFormat() + " | " + mh.getPrimaryColor() + "/dstart");
+        mh.tell(cs, mh.getPrimaryColor() + "/" + mh.getSecondaryFormat() + "daily " + mh.getPrimaryColor() + "check" + mh.getSecondaryFormat() + " | " + mh.getPrimaryColor() + "/dcheck");
+        mh.tell(cs, mh.getPrimaryColor() + "/" + mh.getSecondaryFormat() + "daily " + mh.getPrimaryColor() + "end" + mh.getSecondaryFormat() + " | " + mh.getPrimaryColor() + "/dend");
     }
 
     /**
      * Gibt eine Auflistung administrativer Befehle des Plugins aus.
      * @param cs der, der den Befehl ausgeführt hat
      */
-    private void helpMessage(CommandSender cs) {
+    private void helpMessageAdmin(CommandSender cs) {
         mh.tell(cs, "Administrative Daily-Befehle");
         mh.tell(cs, mh.getPrimaryColor() + "/" + mh.getSecondaryFormat() + "daily " + mh.getPrimaryColor() + "start " + "<" + mh.getSecondaryFormat() + "Spielername" + mh.getPrimaryColor() + ">");
         mh.tell(cs, mh.getPrimaryColor() + "/" + mh.getSecondaryFormat() + "daily " + mh.getPrimaryColor() + "check " + "<" + mh.getSecondaryFormat() + "Spielername" + mh.getPrimaryColor() + ">");
-        mh.tell(cs, mh.getPrimaryColor() + "/" + mh.getSecondaryFormat() + "daily " + mh.getPrimaryColor() + "end <" + mh.getSecondaryFormat() + "Spielername" + mh.getPrimaryColor() + ">");
+        mh.tell(cs, mh.getPrimaryColor() + "/" + mh.getSecondaryFormat() + "daily " + mh.getPrimaryColor() + "end " + "<" + mh.getSecondaryFormat() + "Spielername" + mh.getPrimaryColor() + ">");
         mh.tell(cs, mh.getPrimaryColor() + "/" + mh.getSecondaryFormat() + "daily " + mh.getPrimaryColor() + "nodamage <" + mh.getSecondaryFormat() + "true" + mh.getPrimaryColor() + "|" + mh.getSecondaryFormat() + "false" + mh.getPrimaryColor() + ">");
         mh.tell(cs, mh.getPrimaryColor() + "/" + mh.getSecondaryFormat() + "daily " + mh.getPrimaryColor() + "nohunger <" + mh.getSecondaryFormat() + "true" + mh.getPrimaryColor() + "|" + mh.getSecondaryFormat() + "false" + mh.getPrimaryColor() + ">");
         mh.tell(cs, mh.getPrimaryColor() + "/" + mh.getSecondaryFormat() + "daily " + mh.getPrimaryColor() + "antigrief <" + mh.getSecondaryFormat() + "true" + mh.getPrimaryColor() + "|" + mh.getSecondaryFormat() + "false" + mh.getPrimaryColor() + ">");
