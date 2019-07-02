@@ -40,29 +40,38 @@ public class DailyStart implements CommandExecutor {
 			
 			// wenn der Befehl ohne Parameter daherkommt
 			if(comparams.length < 1) {
-				
-				mh.tell(p,mh.getPrimaryColor() + "Startpunkt gesetzt");
-				
-				dman.setPlayerCheck(p.getDisplayName(), p.getLocation());
-				dman.setPlayerStartTime(p.getDisplayName());
 
-				// unverwundbar setzen wenn aktiv
-				if(dconf.getNoDamage()) {
-                    p.setInvulnerable(true);
-                }
+				if(p.hasPermission("dailylight.self.start")) {
 
-                // Hunger auf 10 Keulen auffüllen wenn aktiv
-                if(dconf.getNoHunger()) {
-                    p.setFoodLevel(20);
-                }
+					mh.tell(p, mh.getPrimaryColor() + "Startpunkt gesetzt");
 
-				return true;
+					dman.setPlayerCheck(p.getDisplayName(), p.getLocation());
+					dman.setPlayerStartTime(p.getDisplayName());
+
+					// unverwundbar setzen wenn aktiv
+					if (dconf.getNoDamage()) {
+						p.setInvulnerable(true);
+					}
+
+					// Hunger auf 10 Keulen auffüllen wenn aktiv
+					if (dconf.getNoHunger()) {
+						p.setFoodLevel(20);
+					}
+
+					return true;
+
+				// sonst bekommt er eine Meldung, dass ihm die Rechte fehlen
+				} else {
+
+					mh.tell(p, mh.getPrimaryColor() + "Dir fehlen die Rechte, einen Parkour zu starten!");
+					return true;
+				}
 				
 			// wenn der Befehl mit Parameter daherkommt
 			} else if(comparams.length == 1) {
 				
 				// nur wenn der Spieler auch Operator ist darf er das
-				if(p.isOp()) {
+				if(p.isOp() || p.hasPermission("dailylight.other.start")) {
 					
 					String targetplayername;
 					targetplayername = comparams[0];
