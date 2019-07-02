@@ -40,28 +40,39 @@ public class DailyCheck implements CommandExecutor {
             // wenn der Befehl ohne Parameter daherkommt
             if (comparams.length < 1) {
 
-                // wenn der Spieler einen Checkpoint erreicht hat (sich also in der CP-Liste befindet)
-                if (dman.hasPlayerCheck(p.getDisplayName())) {
+                if(p.hasPermission("dailylight.self.check")) {
 
-                    p.teleport(dman.getPlayerCheck(p.getDisplayName()));
-                    mh.tell(p, mh.getPrimaryColor() + "Zurück zum Checkpoint :)");
+                    // wenn der Spieler einen Checkpoint erreicht hat (sich also in der CP-Liste befindet)
+                    if (dman.hasPlayerCheck(p.getDisplayName())) {
 
-                // wenn er sich nicht in der CP Liste befindet...
+                        p.teleport(dman.getPlayerCheck(p.getDisplayName()));
+                        mh.tell(p, mh.getPrimaryColor() + "Zurück zum Checkpoint :)");
+
+                        // wenn er sich nicht in der CP Liste befindet...
+                    } else {
+
+                        mh.tell(p, mh.getPrimaryColor() + "Noch keinen Checkpoint erreicht...");
+                    }
+
+                    // wenn der Spieler Op ist, dann gib den Checkpoint-Debug aus
+                    if(p.isOp() || p.hasPermission("dailylight.admin.debug")) {
+                        printCheckpointDebug(p);
+                    }
+
+                    return true;
+
+                // sonst bekommt er eine Meldung, dass ihm die Rechte fehlen
                 } else {
 
-                    mh.tell(p, mh.getPrimaryColor() + "Noch keinen Checkpoint erreicht...");
-                }
-
-                // wenn der Spieler Op ist, dann gib den Checkpoint-Debug aus
-                if(p.isOp()) {
-                    printCheckpointDebug(p);
+                    mh.tell(p, mh.getPrimaryColor() + "Dir fehlen die Rechte, dich zum Checkpoint zu teleportieren.");
+                    return true;
                 }
 
             // wenn der Befehl mit Parameter daherkommt
             } else if (comparams.length == 1) {
 
                 // wenn der Spieler dann noch Op ist...
-                if (p.isOp()) {
+                if (p.isOp() || p.hasPermission("dailylight.other.check")) {
 
                     String targetplayername;
                     targetplayername = comparams[0];
@@ -90,7 +101,7 @@ public class DailyCheck implements CommandExecutor {
                         }
 
                         // wenn der Spieler Op ist, dann gib den Checkpoint-Debug aus
-                        if(p.isOp()) {
+                        if(p.isOp() || p.hasPermission("dailylight.admin.debug")) {
                             printCheckpointDebug(p);
                         }
 
@@ -104,6 +115,11 @@ public class DailyCheck implements CommandExecutor {
                         return true;
                     }
 
+                // sonst bekommt er eine Meldung, dass ihm die Rechte fehlen
+                } else {
+
+                    mh.tell(p, mh.getPrimaryColor() + "Nur ein Operator kann einen anderen Spieler zum Checkpoint teleportieren.");
+                    return true;
                 }
 
             }
