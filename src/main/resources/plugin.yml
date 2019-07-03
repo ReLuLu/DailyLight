@@ -8,7 +8,7 @@ api-version: 1.13
 
 commands:
   daily:
-    description: Provides access to administrative daily commands and prints an overview of them.
+    description: Provides an overview of daily commands.
     usage: /daily
     aliases:
   dcheck:
